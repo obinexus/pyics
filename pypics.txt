@@ -1,0 +1,354 @@
+.
+├── docs
+│   ├── core
+│   │   └── pyics_archiecture.svg
+│   └── README.md
+├── pyics
+│   ├── audit
+│   │   ├── __init__.py
+│   │   ├── py
+│   │   │   ├── audit_engine.py
+│   │   │   ├── compliance_checker.py
+│   │   │   └── milestone_monitor.py
+│   │   ├── reports
+│   │   │   ├── audit_reporter.py
+│   │   │   └── compliance_reporter.py
+│   │   └── schemas
+│   │       ├── audit_schema.py
+│   │       └── compliance_schema.py
+│   ├── calendar
+│   │   ├── builders
+│   │   │   ├── event_builder.py
+│   │   │   └── ics_builder.py
+│   │   ├── __init__.py
+│   │   ├── py
+│   │   │   ├── calendar_factory.py
+│   │   │   ├── event_manager.py
+│   │   │   └── schedule_optimizer.py
+│   │   └── validators
+│   │       ├── calendar_validator.py
+│   │       └── event_validator.py
+│   ├── config
+│   │   ├── default.json
+│   │   ├── development.json
+│   │   ├── environments
+│   │   ├── production.json
+│   │   ├── schemas
+│   │   │   ├── config_schema.json
+│   │   │   └── environment_schema.json
+│   │   └── templates
+│   │       ├── basic_config_template.json
+│   │       └── enterprise_config_template.json
+│   ├── docs
+│   │   ├── api
+│   │   │   ├── api_overview.md
+│   │   │   ├── authentication.md
+│   │   │   ├── examples
+│   │   │   │   ├── curl_examples.md
+│   │   │   │   └── python_examples.py
+│   │   │   ├── openapi
+│   │   │   │   └── pyics_openapi.yaml
+│   │   │   ├── rate_limits.md
+│   │   │   └── schemas
+│   │   │       ├── audit_schema.json
+│   │   │       └── event_schema.json
+│   │   ├── migration
+│   │   │   ├── compatibility_matrix.md
+│   │   │   ├── v1_to_v2_guide.md
+│   │   │   └── v2_to_v3_guide.md
+│   │   ├── README.md
+│   │   ├── tutorials
+│   │   │   ├── business_compliance.md
+│   │   │   ├── enterprise_integration.md
+│   │   │   ├── getting_started.md
+│   │   │   └── troubleshooting.md
+│   │   ├── v1
+│   │   │   ├── api_reference.md
+│   │   │   ├── examples.md
+│   │   │   ├── installation.md
+│   │   │   └── quickstart.md
+│   │   ├── v2
+│   │   │   ├── advanced_features.md
+│   │   │   ├── migration_from_v1.md
+│   │   │   ├── performance_guide.md
+│   │   │   └── whats_new.md
+│   │   └── v3_preview
+│   │       ├── breaking_changes.md
+│   │       ├── experimental_features.md
+│   │       └── preview_roadmap.md
+│   ├── __init__.py
+│   ├── notify
+│   │   ├── channels
+│   │   │   ├── email_channel.py
+│   │   │   ├── sms_channel.py
+│   │   │   └── webhook_channel.py
+│   │   ├── __init__.py
+│   │   ├── py
+│   │   │   ├── alert_dispatcher.py
+│   │   │   ├── escalation_manager.py
+│   │   │   └── notification_engine.py
+│   │   └── templates
+│   │       ├── email_templates.py
+│   │       └── notification_templates.py
+│   ├── pyproject.toml
+│   ├── README.md
+│   ├── requirements.txt
+│   ├── scripts
+│   │   ├── deployment
+│   │   │   ├── deploy.sh
+│   │   │   ├── package.sh
+│   │   │   └── release.sh
+│   │   ├── development
+│   │   │   ├── lint_code.sh
+│   │   │   ├── run_tests.sh
+│   │   │   └── setup_dev_env.sh
+│   │   ├── migration
+│   │   │   ├── migrate_v1_to_v2.py
+│   │   │   └── migrate_v2_to_v3.py
+│   │   └── testing
+│   │       ├── benchmark.py
+│   │       └── run_integration_tests.sh
+│   ├── setup.py
+│   ├── tests
+│   │   ├── conftest.py
+│   │   ├── e2e
+│   │   │   ├── mock_services
+│   │   │   │   ├── mock_auth_service.py
+│   │   │   │   └── mock_smtp_server.py
+│   │   │   ├── scenarios
+│   │   │   ├── test_business_scenarios.py
+│   │   │   ├── test_complete_workflows.py
+│   │   │   └── workflows
+│   │   ├── __init__.py
+│   │   ├── integration
+│   │   │   ├── api
+│   │   │   ├── cli
+│   │   │   ├── cross_version
+│   │   │   ├── test_api_integration.py
+│   │   │   ├── test_cli_integration.py
+│   │   │   └── test_version_compatibility.py
+│   │   ├── unit
+│   │   │   ├── business_logic
+│   │   │   ├── schemas
+│   │   │   ├── test_audit_logic.py
+│   │   │   ├── test_calendar_logic.py
+│   │   │   ├── test_notification_logic.py
+│   │   │   └── utilities
+│   │   ├── v1
+│   │   │   ├── auth
+│   │   │   ├── cli
+│   │   │   ├── core
+│   │   │   ├── distribution
+│   │   │   ├── hooks
+│   │   │   ├── test_auth.py
+│   │   │   ├── test_calendar_engine.py
+│   │   │   ├── test_distribution.py
+│   │   │   └── test_hook_system.py
+│   │   ├── v2
+│   │   │   ├── auth
+│   │   │   ├── cli
+│   │   │   ├── core
+│   │   │   ├── distribution
+│   │   │   ├── hooks
+│   │   │   ├── telemetry
+│   │   │   ├── test_enhanced_features.py
+│   │   │   ├── test_performance.py
+│   │   │   └── test_telemetry.py
+│   │   └── v3_preview
+│   │       ├── experimental
+│   │       ├── migration
+│   │       ├── test_experimental_features.py
+│   │       └── test_migration_tools.py
+│   ├── v1
+│   │   ├── auth
+│   │   │   ├── challenges
+│   │   │   │   ├── challenge_generator.py
+│   │   │   │   └── response_validator.py
+│   │   │   ├── __init__.py
+│   │   │   ├── py
+│   │   │   │   ├── auth_manager.py
+│   │   │   │   ├── session_manager.py
+│   │   │   │   └── token_handler.py
+│   │   │   └── validators
+│   │   │       ├── domain_validator.py
+│   │   │       └── email_validator.py
+│   │   ├── cli
+│   │   │   ├── audit
+│   │   │   │   └── main.py
+│   │   │   ├── distribute
+│   │   │   │   └── main.py
+│   │   │   ├── generate
+│   │   │   │   └── main.py
+│   │   │   ├── __init__.py
+│   │   │   ├── ioc
+│   │   │   └── ioc.py
+│   │   ├── core
+│   │   │   ├── __init__.py
+│   │   │   ├── py
+│   │   │   │   ├── calendar_engine.py
+│   │   │   │   ├── event_builder.py
+│   │   │   │   └── timezone_handler.py
+│   │   │   ├── schemas
+│   │   │   │   ├── event_schema.py
+│   │   │   │   └── metadata_schema.py
+│   │   │   └── utils
+│   │   │       ├── formatters.py
+│   │   │       └── validators.py
+│   │   ├── distribution
+│   │   │   ├── adapters
+│   │   │   │   ├── email_adapter.py
+│   │   │   │   └── rest_adapter.py
+│   │   │   ├── __init__.py
+│   │   │   ├── protocols
+│   │   │   │   ├── distribution_protocol.py
+│   │   │   │   └── retry_handler.py
+│   │   │   └── py
+│   │   │       ├── batch_processor.py
+│   │   │       ├── file_distributor.py
+│   │   │       └── smtp_distributor.py
+│   │   ├── hooks
+│   │   │   ├── decorators
+│   │   │   │   ├── hook_registry.py
+│   │   │   │   ├── posthook.py
+│   │   │   │   └── prehook.py
+│   │   │   ├── __init__.py
+│   │   │   ├── policies
+│   │   │   │   ├── audit_policies.py
+│   │   │   │   └── validation_policies.py
+│   │   │   └── py
+│   │   │       ├── escalation_handler.py
+│   │   │       ├── hook_manager.py
+│   │   │       └── policy_adapter.py
+│   │   └── __init__.py
+│   ├── v2
+│   │   ├── auth
+│   │   │   ├── challenges
+│   │   │   │   ├── cryptographic_challenge_generator.py
+│   │   │   │   └── digital_signature_validator.py
+│   │   │   ├── __init__.py
+│   │   │   ├── py
+│   │   │   │   ├── enterprise_auth_manager.py
+│   │   │   │   ├── jwt_token_handler.py
+│   │   │   │   └── oauth_session_manager.py
+│   │   │   ├── sessions
+│   │   │   │   ├── session_lifecycle.py
+│   │   │   │   └── session_store.py
+│   │   │   └── validators
+│   │   │       ├── enterprise_email_validator.py
+│   │   │       └── ldap_domain_validator.py
+│   │   ├── cli
+│   │   │   ├── audit
+│   │   │   │   └── main.py
+│   │   │   ├── config
+│   │   │   │   └── main.py
+│   │   │   ├── distribute
+│   │   │   │   └── main.py
+│   │   │   ├── generate
+│   │   │   │   └── main.py
+│   │   │   ├── __init__.py
+│   │   │   ├── ioc
+│   │   │   ├── ioc.py
+│   │   │   └── monitor
+│   │   │       └── main.py
+│   │   ├── core
+│   │   │   ├── __init__.py
+│   │   │   ├── py
+│   │   │   │   ├── advanced_timezone_handler.py
+│   │   │   │   ├── enhanced_calendar_engine.py
+│   │   │   │   └── parallel_event_builder.py
+│   │   │   ├── schemas
+│   │   │   │   ├── compliance_metadata_schema.py
+│   │   │   │   └── enhanced_event_schema.py
+│   │   │   ├── utils
+│   │   │   │   ├── advanced_validators.py
+│   │   │   │   └── performance_formatters.py
+│   │   │   └── workers
+│   │   │       ├── process_manager.py
+│   │   │       ├── shared_memory_handler.py
+│   │   │       └── worker_pool.py
+│   │   ├── distribution
+│   │   │   ├── adapters
+│   │   │   │   ├── api_adapter.py
+│   │   │   │   ├── enterprise_email_adapter.py
+│   │   │   │   └── webhook_adapter.py
+│   │   │   ├── channels
+│   │   │   │   ├── rest_channel.py
+│   │   │   │   ├── smtp_channel.py
+│   │   │   │   └── webhook_channel.py
+│   │   │   ├── __init__.py
+│   │   │   ├── protocols
+│   │   │   │   ├── failover_handler.py
+│   │   │   │   └── secure_distribution_protocol.py
+│   │   │   └── py
+│   │   │       ├── async_batch_processor.py
+│   │   │       ├── distribution_orchestrator.py
+│   │   │       └── multi_channel_distributor.py
+│   │   ├── hooks
+│   │   │   ├── decorators
+│   │   │   │   ├── async_hook_registry.py
+│   │   │   │   ├── conditional_hooks.py
+│   │   │   │   └── priority_hooks.py
+│   │   │   ├── escalation
+│   │   │   │   ├── escalation_tree.py
+│   │   │   │   └── notification_dispatcher.py
+│   │   │   ├── __init__.py
+│   │   │   ├── policies
+│   │   │   │   ├── compliance_audit_policies.py
+│   │   │   │   └── enterprise_validation_policies.py
+│   │   │   └── py
+│   │   │       ├── advanced_escalation_handler.py
+│   │   │       ├── enhanced_hook_manager.py
+│   │   │       └── priority_policy_adapter.py
+│   │   ├── __init__.py
+│   │   └── telemetry
+│   │       ├── audit
+│   │       │   ├── audit_trail_manager.py
+│   │       │   ├── compliance_reporter.py
+│   │       │   └── milestone_tracker.py
+│   │       ├── collectors
+│   │       │   ├── business_metrics_collector.py
+│   │       │   ├── error_collector.py
+│   │       │   └── performance_collector.py
+│   │       ├── exporters
+│   │       │   ├── custom_exporter.py
+│   │       │   ├── json_exporter.py
+│   │       │   └── opentelemetry_exporter.py
+│   │       ├── __init__.py
+│   │       └── py
+│   │           ├── metrics_collector.py
+│   │           ├── telemetry_manager.py
+│   │           └── trace_handler.py
+│   └── v3-preview
+│       ├── experimental
+│       │   ├── ai_integration
+│       │   │   ├── predictive_escalation.py
+│       │   │   └── smart_scheduling.py
+│       │   ├── blockchain_audit
+│       │   │   ├── immutable_audit_trail.py
+│       │   │   └── smart_contracts.py
+│       │   ├── __init__.py
+│       │   ├── py
+│       │   │   ├── experimental_features.py
+│       │   │   └── future_apis.py
+│       │   └── real_time_sync
+│       │       ├── event_streaming.py
+│       │       └── websocket_sync.py
+│       ├── __init__.py
+│       └── migration
+│           ├── compatibility
+│           │   ├── backward_compatibility.py
+│           │   └── version_detector.py
+│           ├── __init__.py
+│           ├── py
+│           │   ├── data_transformer.py
+│           │   └── migration_manager.py
+│           ├── v1_to_v3
+│           │   ├── api_adapter.py
+│           │   └── schema_migrator.py
+│           └── v2_to_v3
+│               ├── config_transformer.py
+│               └── feature_migrator.py
+├── pypics.txt
+└── README.md
+
+133 directories, 219 files
