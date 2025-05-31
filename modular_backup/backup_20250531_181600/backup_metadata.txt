@@ -1,0 +1,8 @@
+# Modular Restructuring Backup
+Created: 2025-05-31T18:16:00.260970
+Source: /home/obinexus/projects/pkg/pyics/pyics/core
+Phase: 3.1.6.1 - Modular Problem Classification
+
+Recovery command:
+rm -rf pyics/core
+cp -r modular_backup/backup_20250531_181600/core pyics/core
