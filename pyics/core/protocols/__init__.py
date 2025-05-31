@@ -1,6 +1,18 @@
 #!/usr/bin/env python3
 """
 pyics/core/protocols/__init__.py
+Protocols Domain Module
+
+Engineering Lead: Nnamdi Okpala / OBINexus Computing
+Domain: protocols
+"""
+
+# Import domain configuration
+from .config import get_domain_metadata, validate_configuration, cost_metadata
+
+#!/usr/bin/env python3
+"""
+pyics/core/protocols/__init__.py
 Protocols Domain - Modular ABC Contract Architecture
 
 PROBLEM SOLVED: ABC contract interfaces and protocol definitions
@@ -168,3 +180,13 @@ __all__ = [
 # Self-validation on domain load
 if not initialize_domain():
     raise RuntimeError(f"Failed to initialize domain: protocols")
+
+
+# Export configuration interfaces
+__all__ = getattr(globals(), '__all__', []) + [
+    "get_domain_metadata",
+    "validate_configuration",
+    "cost_metadata"
+]
+
+# [EOF] - End of protocols domain module

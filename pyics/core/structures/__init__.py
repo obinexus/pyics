@@ -1,6 +1,18 @@
 #!/usr/bin/env python3
 """
 pyics/core/structures/__init__.py
+Structures Domain Module
+
+Engineering Lead: Nnamdi Okpala / OBINexus Computing
+Domain: structures
+"""
+
+# Import domain configuration
+from .config import get_domain_metadata, validate_configuration, cost_metadata
+
+#!/usr/bin/env python3
+"""
+pyics/core/structures/__init__.py
 Structures Domain - Modular ABC Contract Architecture
 
 PROBLEM SOLVED: Immutable data containers and structure definitions
@@ -170,3 +182,13 @@ __all__ = [
 # Self-validation on domain load
 if not initialize_domain():
     raise RuntimeError(f"Failed to initialize domain: structures")
+
+
+# Export configuration interfaces
+__all__ = getattr(globals(), '__all__', []) + [
+    "get_domain_metadata",
+    "validate_configuration",
+    "cost_metadata"
+]
+
+# [EOF] - End of structures domain module

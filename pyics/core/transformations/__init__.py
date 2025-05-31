@@ -1,6 +1,18 @@
 #!/usr/bin/env python3
 """
 pyics/core/transformations/__init__.py
+Transformations Domain Module
+
+Engineering Lead: Nnamdi Okpala / OBINexus Computing
+Domain: transformations
+"""
+
+# Import domain configuration
+from .config import get_domain_metadata, validate_configuration, cost_metadata
+
+#!/usr/bin/env python3
+"""
+pyics/core/transformations/__init__.py
 Transformations Domain - Modular ABC Contract Architecture
 
 PROBLEM SOLVED: Pure transformation functions with composition engine
@@ -172,3 +184,13 @@ __all__ = [
 # Self-validation on domain load
 if not initialize_domain():
     raise RuntimeError(f"Failed to initialize domain: transformations")
+
+
+# Export configuration interfaces
+__all__ = getattr(globals(), '__all__', []) + [
+    "get_domain_metadata",
+    "validate_configuration",
+    "cost_metadata"
+]
+
+# [EOF] - End of transformations domain module

@@ -1,6 +1,18 @@
 #!/usr/bin/env python3
 """
 pyics/core/validators/__init__.py
+Validators Domain Module
+
+Engineering Lead: Nnamdi Okpala / OBINexus Computing
+Domain: validators
+"""
+
+# Import domain configuration
+from .config import get_domain_metadata, validate_configuration, cost_metadata
+
+#!/usr/bin/env python3
+"""
+pyics/core/validators/__init__.py
 Validators Domain - Modular ABC Contract Architecture
 
 PROBLEM SOLVED: Comprehensive validation framework with ABC contracts
@@ -170,3 +182,13 @@ __all__ = [
 # Self-validation on domain load
 if not initialize_domain():
     raise RuntimeError(f"Failed to initialize domain: validators")
+
+
+# Export configuration interfaces
+__all__ = getattr(globals(), '__all__', []) + [
+    "get_domain_metadata",
+    "validate_configuration",
+    "cost_metadata"
+]
+
+# [EOF] - End of validators domain module

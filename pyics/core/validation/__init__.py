@@ -1,6 +1,18 @@
 #!/usr/bin/env python3
 """
 pyics/core/validation/__init__.py
+Validation Domain Module
+
+Engineering Lead: Nnamdi Okpala / OBINexus Computing
+Domain: validation
+"""
+
+# Import domain configuration
+from .config import get_domain_metadata, validate_configuration, cost_metadata
+
+#!/usr/bin/env python3
+"""
+pyics/core/validation/__init__.py
 Linear Domain: Data integrity validation
 
 DOMAIN CLASSIFICATION:
@@ -76,3 +88,13 @@ __all__ = [
 ]
 
 logger.info(f"Linear Domain 'validation' initialized - Level 3")
+
+
+# Export configuration interfaces
+__all__ = getattr(globals(), '__all__', []) + [
+    "get_domain_metadata",
+    "validate_configuration",
+    "cost_metadata"
+]
+
+# [EOF] - End of validation domain module

@@ -1,6 +1,18 @@
 #!/usr/bin/env python3
 """
 pyics/core/routing/__init__.py
+Routing Domain Module
+
+Engineering Lead: Nnamdi Okpala / OBINexus Computing
+Domain: routing
+"""
+
+# Import domain configuration
+from .config import get_domain_metadata, validate_configuration, cost_metadata
+
+#!/usr/bin/env python3
+"""
+pyics/core/routing/__init__.py
 Routing Domain - Modular ABC Contract Architecture
 
 PROBLEM SOLVED: Execution coordination and pipeline routing
@@ -168,3 +180,13 @@ __all__ = [
 # Self-validation on domain load
 if not initialize_domain():
     raise RuntimeError(f"Failed to initialize domain: routing")
+
+
+# Export configuration interfaces
+__all__ = getattr(globals(), '__all__', []) + [
+    "get_domain_metadata",
+    "validate_configuration",
+    "cost_metadata"
+]
+
+# [EOF] - End of routing domain module
