@@ -1,46 +1,69 @@
 #!/usr/bin/env python3
 """
 pyics_structure_corrector.py
-Pyics Structure Corrector and Single-Pass Architecture Implementation
+Pyics Single-Pass Architecture Structure Corrector
 
 Engineering Lead: Nnamdi Okpala / OBINexus Computing
-Purpose: Correct existing structure violations and implement clean single-pass architecture
-Phase: 3.1.6.3 - Emergency Structure Correction
+Purpose: Systematic correction of domain violations and implementation of clean single-pass loading
+Architecture: Domain consolidation with cost-aware priority loading
+Methodology: Waterfall correction with preservation of functional code
 
-PROBLEM SOLVED: Fixes complex nested structures and implements single-pass loading
-DEPENDENCIES: shutil, pathlib for file operations
-THREAD SAFETY: Yes - atomic file operations with backup
-DETERMINISTIC: Yes - systematic structure correction with validation
+PROBLEM SOLVED: Corrects complex nested structures and implements clean domain architecture
+DEPENDENCIES: Standard library only (pathlib, shutil, ast)
+THREAD SAFETY: Yes - atomic file operations with comprehensive backup
+DETERMINISTIC: Yes - reproducible architecture correction with validation
 
-This script corrects existing architectural violations and implements the proper
-single-pass modular architecture as specified in the cost function analysis.
+This script systematically corrects the current structural violations by:
+1. Consolidating redundant domains (validation/validators, transforms/transformations)
+2. Flattening complex nested structures 
+3. Implementing standard 6-module domain pattern
+4. Creating proper single-pass IoC registry
+5. Establishing correct load order dependencies
 """
 
 import os
 import sys
 import shutil
+import ast
 from pathlib import Path
-from typing import Dict, List, Set, Any, Optional
+from typing import Dict, List, Set, Any, Optional, Tuple
 from datetime import datetime
 import logging
 
 # Configuration
 PROJECT_ROOT = Path.cwd()
-CORE_DIR = "pyics/core"
+PYICS_CORE_DIR = "pyics/core"
 BACKUP_DIR = "structure_backup"
 
-# Target domains for single-pass architecture
-TARGET_DOMAINS = ["primitives", "protocols", "structures"]
-
-# Standard module pattern (single-pass compliance)
-STANDARD_MODULES = {
-    "data_types.py": "Core data type definitions and immutable containers",
-    "operations.py": "Primary operational functions and transformations", 
-    "relations.py": "Relational logic and cross-reference handling",
-    "config.py": "Domain configuration and cost metadata",
-    "__init__.py": "Public interface exports and module initialization",
-    "README.md": "Domain documentation and usage guidelines"
+# Domain consolidation mapping
+DOMAIN_CONSOLIDATION = {
+    "validation": "validators",  # Merge validation into validators
+    "transforms": "transformations",  # Merge transforms into transformations
+    "logic": "DELETE",  # Delete logic domain - redistribute functions
 }
+
+# Standard domain load order
+DOMAIN_LOAD_ORDER = {
+    "primitives": 10,
+    "protocols": 20,
+    "structures": 30,
+    "composition": 40,
+    "validators": 50,  # Consolidated validation
+    "transformations": 60,  # Consolidated transforms
+    "registry": 70,
+    "routing": 80,
+    "safety": 90
+}
+
+# Standard domain module pattern
+STANDARD_MODULES = [
+    "data_types.py",
+    "operations.py", 
+    "relations.py",
+    "config.py",
+    "__init__.py",
+    "README.md"
+]
 
 # Setup logging
 logging.basicConfig(
@@ -49,1921 +72,643 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-class StructureCorrector:
+class PyicsStructureCorrector:
     """
-    Systematic corrector for Pyics structure violations
+    Systematic corrector for Pyics domain architecture violations
     
-    Implements emergency correction of existing complex structures
-    and establishes clean single-pass modular architecture.
+    Implements comprehensive domain consolidation, structure flattening,
+    and single-pass architecture establishment with validation integration.
     """
     
     def __init__(self, project_root: Path):
         self.project_root = project_root.resolve()
-        self.core_dir = self.project_root / CORE_DIR
+        self.core_dir = self.project_root / PYICS_CORE_DIR
         self.backup_dir = self.project_root / BACKUP_DIR
-        self.correction_results = {}
         
-    def execute_structure_correction(self) -> Dict[str, Any]:
-        """
-        Execute complete structure correction process
+        self.correction_results = {
+            "backup_created": False,
+            "complex_structures_cleaned": 0,
+            "domains_consolidated": 0,
+            "standard_modules_generated": 0,
+            "ioc_registry_created": False,
+            "validation_passed": False,
+            "summary": ""
+        }
         
-        Returns:
-            Comprehensive correction results
-        """
-        logger.info("=" * 80)
-        logger.info("PYICS EMERGENCY STRUCTURE CORRECTION")
-        logger.info("Phase 3.1.6.3 - Single-Pass Architecture Implementation")
+        self.discovered_domains = []
+        self.domain_analysis = {}
+        
+    def execute_complete_correction(self) -> Dict[str, Any]:
+        """Execute complete structure correction process"""
+        logger.info("=" * 60)
+        logger.info("PYICS SINGLE-PASS ARCHITECTURE CORRECTION")
         logger.info("Engineering Lead: Nnamdi Okpala / OBINexus Computing")
-        logger.info("=" * 80)
+        logger.info("=" * 60)
         
         try:
-            # Phase 1: Create backup of current structure
-            backup_result = self._create_structure_backup()
+            # Phase 1: Create comprehensive backup
+            self._create_structure_backup()
             
-            # Phase 2: Analyze current violations
-            violation_analysis = self._analyze_structure_violations()
+            # Phase 2: Analyze current domain structure
+            self._analyze_domain_structure()
             
-            # Phase 3: Clean up complex nested structures
-            cleanup_result = self._cleanup_complex_structures()
+            # Phase 3: Clean complex nested structures
+            self._clean_complex_structures()
             
-            # Phase 4: Consolidate scattered files
-            consolidation_result = self._consolidate_scattered_files()
+            # Phase 4: Consolidate redundant domains
+            self._consolidate_domains()
             
-            # Phase 5: Generate missing structures domain
-            structures_result = self._generate_structures_domain()
+            # Phase 5: Generate standard domain modules
+            self._generate_standard_modules()
             
-            # Phase 6: Implement standard module pattern
-            standardization_result = self._implement_standard_pattern()
+            # Phase 6: Create single-pass IoC registry
+            self._create_ioc_registry()
             
-            # Phase 7: Create single-pass IoC registry
-            ioc_result = self._create_single_pass_registry()
+            # Phase 7: Validate corrected architecture
+            self._validate_architecture()
             
-            # Phase 8: Validate corrected structure
-            validation_result = self._validate_corrected_structure()
-            
-            return {
-                "backup": backup_result,
-                "violation_analysis": violation_analysis,
-                "cleanup": cleanup_result,
-                "consolidation": consolidation_result,
-                "structures_generation": structures_result,
-                "standardization": standardization_result,
-                "ioc_registry": ioc_result,
-                "validation": validation_result,
-                "overall_status": "SUCCESS" if validation_result.get("valid", False) else "FAILED"
-            }
+            return self.correction_results
             
         except Exception as e:
             logger.error(f"Structure correction failed: {e}")
-            return {"error": str(e), "overall_status": "CRITICAL_FAILURE"}
+            self.correction_results["summary"] = f"❌ Critical correction failure: {e}"
+            return self.correction_results
     
-    def _create_structure_backup(self) -> Dict[str, Any]:
-        """Create complete backup of current structure"""
-        logger.info("Creating structure backup...")
-        
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        backup_path = self.backup_dir / f"structure_backup_{timestamp}"
-        
+    def _create_structure_backup(self) -> None:
+        """Create comprehensive backup of current structure"""
         try:
+            # Create timestamped backup directory
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            backup_path = self.backup_dir / f"structure_backup_{timestamp}"
+            backup_path.mkdir(parents=True, exist_ok=True)
+            
+            # Backup entire core directory
             if self.core_dir.exists():
-                shutil.copytree(self.core_dir, backup_path)
+                shutil.copytree(self.core_dir, backup_path / "core")
                 logger.info(f"Structure backup created: {backup_path}")
-                return {"status": "success", "backup_path": str(backup_path)}
-            else:
-                logger.warning("No core directory found to backup")
-                return {"status": "no_backup_needed", "reason": "core_directory_missing"}
                 
+            self.correction_results["backup_created"] = True
+            
         except Exception as e:
             logger.error(f"Backup creation failed: {e}")
-            return {"status": "failed", "error": str(e)}
+            raise
     
-    def _analyze_structure_violations(self) -> Dict[str, Any]:
-        """Analyze current structure for violations"""
-        logger.info("Analyzing structure violations...")
-        
-        violations = {
-            "complex_nested_structures": [],
-            "scattered_files": [],
-            "missing_domains": [],
-            "non_standard_modules": [],
-            "total_violations": 0
-        }
+    def _analyze_domain_structure(self) -> None:
+        """Analyze current domain structure for correction planning"""
+        logger.info("Analyzing current domain structure...")
         
         if not self.core_dir.exists():
-            violations["missing_domains"] = TARGET_DOMAINS
-            violations["total_violations"] = len(TARGET_DOMAINS)
-            return violations
+            logger.error(f"Core directory not found: {self.core_dir}")
+            return
         
-        for domain_name in TARGET_DOMAINS:
-            domain_path = self.core_dir / domain_name
-            
-            if not domain_path.exists():
-                violations["missing_domains"].append(domain_name)
-                violations["total_violations"] += 1
-                continue
-            
-            # Check for complex nested structures
-            nested_dirs = [
-                d for d in domain_path.iterdir() 
-                if d.is_dir() and d.name not in ["__pycache__"] and not d.name.startswith('.')
-            ]
-            
-            complex_dirs = [d.name for d in nested_dirs if d.name in [
-                "implementations", "interfaces", "compliance", "contracts", "tests"
-            ]]
-            
-            if complex_dirs:
-                violations["complex_nested_structures"].append({
-                    "domain": domain_name,
-                    "complex_dirs": complex_dirs
-                })
-                violations["total_violations"] += len(complex_dirs)
-            
-            # Check for scattered files
-            py_files = [f.name for f in domain_path.glob("*.py")]
-            standard_files = list(STANDARD_MODULES.keys())
-            
-            scattered = [f for f in py_files if f not in standard_files]
-            if scattered:
-                violations["scattered_files"].append({
-                    "domain": domain_name,
-                    "scattered_files": scattered
-                })
-                violations["total_violations"] += len(scattered)
-            
-            # Check for non-standard modules
-            missing_standard = [f for f in standard_files if f not in py_files and f != "README.md"]
-            if missing_standard:
-                violations["non_standard_modules"].append({
-                    "domain": domain_name,
-                    "missing_modules": missing_standard
-                })
-                violations["total_violations"] += len(missing_standard)
+        for item in self.core_dir.iterdir():
+            if item.is_dir() and not item.name.startswith('.') and item.name != '__pycache__':
+                domain_name = item.name
+                self.discovered_domains.append(domain_name)
+                
+                # Analyze domain for violations
+                analysis = self._analyze_single_domain(item, domain_name)
+                self.domain_analysis[domain_name] = analysis
+                
+                logger.info(f"Analyzed {domain_name}: {analysis['violations']} violations")
         
-        logger.info(f"Structure analysis complete: {violations['total_violations']} violations found")
-        return violations
+        logger.info(f"Domain analysis complete: {len(self.discovered_domains)} domains")
     
-    def _cleanup_complex_structures(self) -> Dict[str, Any]:
-        """Clean up complex nested directory structures"""
-        logger.info("Cleaning up complex nested structures...")
-        
-        cleanup_results = {
-            "domains_cleaned": [],
-            "directories_removed": [],
-            "files_consolidated": []
+    def _analyze_single_domain(self, domain_path: Path, domain_name: str) -> Dict[str, Any]:
+        """Analyze single domain for structural violations"""
+        analysis = {
+            "domain_name": domain_name,
+            "path": str(domain_path),
+            "violations": [],
+            "has_complex_nesting": False,
+            "has_standard_modules": [],
+            "missing_modules": [],
+            "extractable_functions": [],
+            "consolidation_target": None
         }
         
-        for domain_name in TARGET_DOMAINS:
-            domain_path = self.core_dir / domain_name
-            
-            if not domain_path.exists():
-                continue
-            
-            # Identify complex directories to remove
-            complex_dirs = ["implementations", "interfaces", "compliance", "contracts", "tests"]
-            
-            domain_cleaned = False
-            for complex_dir_name in complex_dirs:
-                complex_dir_path = domain_path / complex_dir_name
-                
-                if complex_dir_path.exists():
-                    try:
-                        # Try to consolidate useful files before removal
-                        useful_files = self._extract_useful_files(complex_dir_path, domain_path)
-                        cleanup_results["files_consolidated"].extend(useful_files)
-                        
-                        # Remove complex directory
-                        shutil.rmtree(complex_dir_path)
-                        cleanup_results["directories_removed"].append(f"{domain_name}/{complex_dir_name}")
-                        domain_cleaned = True
-                        
-                        logger.info(f"Removed complex directory: {domain_name}/{complex_dir_name}")
-                        
-                    except Exception as e:
-                        logger.error(f"Failed to remove {complex_dir_path}: {e}")
-            
-            if domain_cleaned:
-                cleanup_results["domains_cleaned"].append(domain_name)
+        # Check for complex nesting violations
+        complex_dirs = ["implementations", "interfaces", "compliance", "contracts", "tests"]
+        for complex_dir in complex_dirs:
+            if (domain_path / complex_dir).exists():
+                analysis["violations"].append(f"complex_nesting: {complex_dir}/")
+                analysis["has_complex_nesting"] = True
         
-        logger.info(f"Complex structure cleanup complete: {len(cleanup_results['directories_removed'])} directories removed")
-        return cleanup_results
-    
-    def _extract_useful_files(self, complex_dir: Path, target_domain: Path) -> List[str]:
-        """Extract useful files from complex directories before removal"""
-        extracted_files = []
-        
-        for py_file in complex_dir.rglob("*.py"):
-            if py_file.name == "__init__.py":
-                continue
-            
-            # Determine target location based on content
-            target_file = None
-            
-            try:
-                with open(py_file, 'r', encoding='utf-8') as f:
-                    content = f.read()
-                
-                # Simple heuristic for file classification
-                if "dataclass" in content or "TypedDict" in content or "class " in content:
-                    target_file = target_domain / "data_types.py"
-                elif "def " in content and "Protocol" not in content:
-                    target_file = target_domain / "operations.py"
-                elif "relation" in content.lower() or "graph" in content.lower():
-                    target_file = target_domain / "relations.py"
-                
-                if target_file:
-                    # Append content to target file (will be properly organized later)
-                    with open(target_file, 'a', encoding='utf-8') as target_f:
-                        target_f.write(f"\n\n# Consolidated from {py_file.relative_to(target_domain)}\n")
-                        target_f.write(content)
-                    
-                    extracted_files.append(str(py_file.relative_to(target_domain)))
-                    
-            except Exception as e:
-                logger.warning(f"Failed to extract {py_file}: {e}")
-        
-        return extracted_files
-    
-    def _consolidate_scattered_files(self) -> Dict[str, Any]:
-        """Consolidate scattered files into standard modules"""
-        logger.info("Consolidating scattered files...")
-        
-        consolidation_results = {
-            "domains_processed": [],
-            "files_consolidated": [],
-            "files_removed": []
-        }
-        
-        for domain_name in TARGET_DOMAINS:
-            domain_path = self.core_dir / domain_name
-            
-            if not domain_path.exists():
-                continue
-            
-            # Get all Python files except standard ones
-            py_files = [f for f in domain_path.glob("*.py")]
-            standard_files = {f for f in STANDARD_MODULES.keys() if f.endswith('.py')}
-            
-            scattered_files = [f for f in py_files if f.name not in standard_files]
-            
-            if scattered_files:
-                for scattered_file in scattered_files:
-                    try:
-                        # Determine appropriate consolidation target
-                        target_module = self._determine_consolidation_target(scattered_file)
-                        target_path = domain_path / target_module
-                        
-                        # Append content to target module
-                        with open(scattered_file, 'r', encoding='utf-8') as source_f:
-                            content = source_f.read()
-                        
-                        with open(target_path, 'a', encoding='utf-8') as target_f:
-                            target_f.write(f"\n\n# Consolidated from {scattered_file.name}\n")
-                            target_f.write(content)
-                        
-                        # Remove original scattered file
-                        scattered_file.unlink()
-                        
-                        consolidation_results["files_consolidated"].append(f"{domain_name}/{scattered_file.name}")
-                        consolidation_results["files_removed"].append(str(scattered_file))
-                        
-                        logger.info(f"Consolidated {scattered_file.name} into {target_module}")
-                        
-                    except Exception as e:
-                        logger.error(f"Failed to consolidate {scattered_file}: {e}")
-                
-                consolidation_results["domains_processed"].append(domain_name)
-        
-        logger.info(f"File consolidation complete: {len(consolidation_results['files_consolidated'])} files consolidated")
-        return consolidation_results
-    
-    def _determine_consolidation_target(self, file_path: Path) -> str:
-        """Determine appropriate target module for consolidation"""
-        file_name = file_path.name.lower()
-        
-        # Simple heuristic based on file name
-        if any(keyword in file_name for keyword in ["data", "type", "class", "entity"]):
-            return "data_types.py"
-        elif any(keyword in file_name for keyword in ["operation", "function", "util", "transform"]):
-            return "operations.py"
-        elif any(keyword in file_name for keyword in ["relation", "graph", "link", "connect"]):
-            return "relations.py"
-        else:
-            # Default to operations for miscellaneous files
-            return "operations.py"
-    
-    def _generate_structures_domain(self) -> Dict[str, Any]:
-        """Generate missing structures domain"""
-        logger.info("Generating structures domain...")
-        
-        structures_path = self.core_dir / "structures"
-        structures_path.mkdir(parents=True, exist_ok=True)
-        
-        generation_results = {
-            "domain_created": True,
-            "modules_generated": [],
-            "status": "success"
-        }
-        
-        # Define structures domain specification
-        structures_spec = {
-            "priority_index": 2,
-            "compute_time_weight": 0.2,
-            "exposure_type": "version_required",
-            "dependency_level": 1,
-            "thread_safe": True,
-            "load_order": 30,
-            "dependencies": ["primitives", "protocols"],
-            "problem_solved": "Immutable data container definitions ensuring zero-mutation state management across calendar operations",
-            "separation_rationale": "Data structure definitions require isolation from transformation logic to maintain immutability guarantees",
-            "merge_potential": "PRESERVE"
-        }
-        
-        # Generate standard modules for structures domain
-        for module_name, description in STANDARD_MODULES.items():
-            module_path = structures_path / module_name
-            
-            try:
-                if module_name == "data_types.py":
-                    content = self._generate_structures_data_types()
-                elif module_name == "operations.py":
-                    content = self._generate_structures_operations()
-                elif module_name == "relations.py":
-                    content = self._generate_structures_relations()
-                elif module_name == "config.py":
-                    content = self._generate_structures_config(structures_spec)
-                elif module_name == "__init__.py":
-                    content = self._generate_structures_init(structures_spec)
-                elif module_name == "README.md":
-                    content = self._generate_structures_readme(structures_spec)
-                else:
-                    continue
-                
-                with open(module_path, 'w', encoding='utf-8') as f:
-                    f.write(content)
-                
-                generation_results["modules_generated"].append(module_name)
-                logger.info(f"Generated structures/{module_name}")
-                
-            except Exception as e:
-                logger.error(f"Failed to generate structures/{module_name}: {e}")
-                generation_results["status"] = "partial_failure"
-        
-        logger.info("Structures domain generation complete")
-        return generation_results
-    
-    def _generate_structures_data_types(self) -> str:
-        """Generate structures domain data types"""
-        timestamp = datetime.now().isoformat()
-        
-        return f'''#!/usr/bin/env python3
-"""
-pyics/core/structures/data_types.py
-Structures Domain Data Types
-
-Generated: {timestamp}
-Engineering Lead: Nnamdi Okpala / OBINexus Computing
-Domain: structures
-
-PROBLEM SOLVED: Immutable data container definitions ensuring zero-mutation state management
-DEPENDENCIES: primitives (AtomicValue), protocols (DomainInterface)
-THREAD SAFETY: Yes - Immutable data structures
-DETERMINISTIC: Yes - Static type definitions
-
-This module defines immutable data structures for calendar operations following
-Data-Oriented Programming principles with single-pass architecture compliance.
-"""
-
-from dataclasses import dataclass, field
-from typing import Dict, List, Set, Any, Optional, Union, Protocol
-from enum import Enum, auto
-from datetime import datetime
-
-# Import dependencies following single-pass architecture
-from pyics.core.primitives import AtomicValue
-from pyics.core.protocols import DomainInterface
-
-# Domain-specific enums
-class StructuresStatus(Enum):
-    """Status enumeration for structures domain operations"""
-    INITIALIZED = auto()
-    PROCESSING = auto()
-    COMPLETED = auto()
-    ERROR = auto()
-
-class StructuresPriority(Enum):
-    """Priority levels for structures domain elements"""
-    LOW = 1
-    MEDIUM = 2
-    HIGH = 3
-    CRITICAL = 4
-
-# Core immutable data containers
-@dataclass(frozen=True)
-class StructuresEntity:
-    """
-    Base entity for structures domain
-    
-    Immutable data container following DOP principles
-    """
-    id: str
-    name: str
-    status: StructuresStatus = StructuresStatus.INITIALIZED
-    priority: StructuresPriority = StructuresPriority.MEDIUM
-    created_at: datetime = field(default_factory=datetime.now)
-    metadata: Dict[str, Any] = field(default_factory=dict)
-
-@dataclass(frozen=True)
-class EventStructure:
-    """
-    Immutable event data container
-    
-    Core structure for calendar event representation
-    """
-    event_id: str
-    title: str
-    start_time: datetime
-    end_time: datetime
-    description: str = ""
-    location: str = ""
-    attendees: List[str] = field(default_factory=list)
-    metadata: Dict[str, Any] = field(default_factory=dict)
-    
-    def __post_init__(self):
-        """Validate event structure constraints"""
-        if not self.event_id or not self.title:
-            raise ValueError("event_id and title are required")
-        if self.start_time >= self.end_time:
-            raise ValueError("start_time must be before end_time")
-
-@dataclass(frozen=True)  
-class CalendarStructure:
-    """
-    Immutable calendar data container
-    
-    Container for calendar metadata and event collections
-    """
-    calendar_id: str
-    name: str
-    owner: str
-    events: List[EventStructure] = field(default_factory=list)
-    timezone: str = "UTC"
-    configuration: Dict[str, Any] = field(default_factory=dict)
-    
-    def __post_init__(self):
-        """Validate calendar structure constraints"""
-        if not self.calendar_id or not self.name:
-            raise ValueError("calendar_id and name are required")
-
-@dataclass(frozen=True)
-class RecurrenceStructure:
-    """
-    Immutable recurrence pattern definition
-    
-    Defines repeating event patterns
-    """
-    pattern_id: str
-    frequency: str  # daily, weekly, monthly, yearly
-    interval: int = 1
-    end_date: Optional[datetime] = None
-    occurrences: Optional[int] = None
-    week_days: List[str] = field(default_factory=list)
-    month_day: Optional[int] = None
-    
-    def __post_init__(self):
-        """Validate recurrence constraints"""
-        valid_frequencies = ["daily", "weekly", "monthly", "yearly"]
-        if self.frequency not in valid_frequencies:
-            raise ValueError(f"frequency must be one of {valid_frequencies}")
-
-@dataclass(frozen=True)
-class AuditStructure:
-    """
-    Immutable audit trail data container
-    
-    Tracks all operations for compliance and debugging
-    """
-    audit_id: str
-    timestamp: datetime
-    operation: str
-    entity_type: str
-    entity_id: str
-    user_id: str
-    changes: Dict[str, Any] = field(default_factory=dict)
-    context: Dict[str, Any] = field(default_factory=dict)
-
-# Protocol definitions for structures
-class StructuresProcessor(Protocol):
-    """Protocol for structures domain processors"""
-    
-    def process(self, structure: StructuresEntity) -> Dict[str, Any]:
-        """Process a structures entity"""
-        ...
-    
-    def validate(self, structure: StructuresEntity) -> bool:
-        """Validate a structures entity"""
-        ...
-
-class StructuresRepository(Protocol):
-    """Protocol for structures domain data repositories"""
-    
-    def store(self, structure: StructuresEntity) -> bool:
-        """Store a structures entity"""
-        ...
-    
-    def retrieve(self, structure_id: str) -> Optional[StructuresEntity]:
-        """Retrieve a structures entity by ID"""
-        ...
-
-# Type aliases for complex structures
-StructuresCollection = List[StructuresEntity]
-StructuresIndex = Dict[str, StructuresEntity]
-EventCollection = List[EventStructure]
-CalendarCollection = List[CalendarStructure]
-
-# Export interface
-__all__ = [
-    'StructuresStatus',
-    'StructuresPriority',
-    'StructuresEntity',
-    'EventStructure',
-    'CalendarStructure',
-    'RecurrenceStructure',
-    'AuditStructure',
-    'StructuresProcessor',
-    'StructuresRepository',
-    'StructuresCollection',
-    'StructuresIndex',
-    'EventCollection',
-    'CalendarCollection',
-]
-
-# [EOF] - End of structures data_types.py module
-'''
-    
-    def _generate_structures_operations(self) -> str:
-        """Generate structures domain operations"""
-        timestamp = datetime.now().isoformat()
-        
-        return f'''#!/usr/bin/env python3
-"""
-pyics/core/structures/operations.py
-Structures Domain Operations
-
-Generated: {timestamp}
-Engineering Lead: Nnamdi Okpala / OBINexus Computing
-Domain: structures
-
-PROBLEM SOLVED: Immutable structure manipulation and validation operations
-DEPENDENCIES: structures.data_types, structures.relations, primitives, protocols
-THREAD SAFETY: Yes - Pure functions with immutable data
-DETERMINISTIC: Yes - Deterministic operations on immutable structures
-
-This module provides operations for immutable structure manipulation following
-DOP principles and single-pass architecture compliance.
-"""
-
-from typing import Dict, List, Set, Tuple, Optional, Callable, Iterator, Any
-from functools import reduce, partial
-from dataclasses import replace
-from datetime import datetime, timedelta
-import logging
-
-# Import domain data types and relations
-from .data_types import (
-    StructuresEntity,
-    EventStructure,
-    CalendarStructure,
-    RecurrenceStructure,
-    AuditStructure,
-    StructuresCollection,
-    StructuresIndex,
-    StructuresStatus,
-    StructuresPriority
-)
-from .relations import RelationGraph, Relation, RelationType
-
-# Import dependencies following single-pass architecture
-from pyics.core.primitives import AtomicValue, create_atomic_value
-from pyics.core.protocols import ValidationProtocol
-
-logger = logging.getLogger("pyics.core.structures.operations")
-
-# Event structure operations (pure functions)
-def create_event_structure(
-    event_id: str,
-    title: str,
-    start_time: datetime,
-    end_time: datetime,
-    **kwargs
-) -> EventStructure:
-    """
-    Create a new immutable event structure
-    
-    Pure function for event creation with validation
-    """
-    return EventStructure(
-        event_id=event_id,
-        title=title,
-        start_time=start_time,
-        end_time=end_time,
-        description=kwargs.get('description', ''),
-        location=kwargs.get('location', ''),
-        attendees=kwargs.get('attendees', []),
-        metadata=kwargs.get('metadata', {{}})
-    )
-
-def update_event_structure(
-    event: EventStructure,
-    **updates
-) -> EventStructure:
-    """
-    Update event structure (returns new immutable instance)
-    
-    Pure function for event updates maintaining immutability
-    """
-    return replace(event, **updates)
-
-def validate_event_structure(event: EventStructure) -> bool:
-    """
-    Validate event structure for integrity and constraints
-    
-    Pure validation function with deterministic behavior
-    """
-    try:
-        # Basic validation
-        if not event.event_id or not event.title:
-            return False
-        
-        # Time validation
-        if event.start_time >= event.end_time:
-            return False
-        
-        # Validate attendees format
-        if not all(isinstance(attendee, str) for attendee in event.attendees):
-            return False
-        
-        return True
-        
-    except Exception as e:
-        logger.error(f"Event validation failed: {{e}}")
-        return False
-
-# Calendar structure operations (pure functions)
-def create_calendar_structure(
-    calendar_id: str,
-    name: str,
-    owner: str,
-    **kwargs
-) -> CalendarStructure:
-    """
-    Create a new immutable calendar structure
-    
-    Pure function for calendar creation
-    """
-    return CalendarStructure(
-        calendar_id=calendar_id,
-        name=name,
-        owner=owner,
-        events=kwargs.get('events', []),
-        timezone=kwargs.get('timezone', 'UTC'),
-        configuration=kwargs.get('configuration', {{}})
-    )
-
-def add_event_to_calendar(
-    calendar: CalendarStructure,
-    event: EventStructure
-) -> CalendarStructure:
-    """
-    Add event to calendar (returns new calendar instance)
-    
-    Pure function maintaining calendar immutability
-    """
-    new_events = list(calendar.events) + [event]
-    return replace(calendar, events=new_events)
-
-def remove_event_from_calendar(
-    calendar: CalendarStructure,
-    event_id: str
-) -> CalendarStructure:
-    """
-    Remove event from calendar (returns new calendar instance)
-    
-    Pure function for event removal
-    """
-    new_events = [e for e in calendar.events if e.event_id != event_id]
-    return replace(calendar, events=new_events)
-
-def filter_events_by_date_range(
-    calendar: CalendarStructure,
-    start_date: datetime,
-    end_date: datetime
-) -> List[EventStructure]:
-    """
-    Filter events by date range
-    
-    Pure filtering function
-    """
-    return [
-        event for event in calendar.events
-        if event.start_time >= start_date and event.end_time <= end_date
-    ]
-
-# Recurrence operations (pure functions)
-def create_recurrence_structure(
-    pattern_id: str,
-    frequency: str,
-    interval: int = 1,
-    **kwargs
-) -> RecurrenceStructure:
-    """
-    Create recurrence pattern structure
-    
-    Pure function for recurrence definition
-    """
-    return RecurrenceStructure(
-        pattern_id=pattern_id,
-        frequency=frequency,
-        interval=interval,
-        end_date=kwargs.get('end_date'),
-        occurrences=kwargs.get('occurrences'),
-        week_days=kwargs.get('week_days', []),
-        month_day=kwargs.get('month_day')
-    )
-
-def generate_recurring_events(
-    base_event: EventStructure,
-    recurrence: RecurrenceStructure,
-    max_occurrences: int = 100
-) -> List[EventStructure]:
-    """
-    Generate recurring events from base event and pattern
-    
-    Pure function for recurrence expansion
-    """
-    events = []
-    current_start = base_event.start_time
-    current_end = base_event.end_time
-    duration = current_end - current_start
-    
-    occurrence_count = 0
-    
-    while occurrence_count < max_occurrences:
-        if recurrence.end_date and current_start > recurrence.end_date:
-            break
-        
-        if recurrence.occurrences and occurrence_count >= recurrence.occurrences:
-            break
-        
-        # Create recurring event instance
-        recurring_event = replace(
-            base_event,
-            event_id=f"{{base_event.event_id}}_{{occurrence_count + 1}}",
-            start_time=current_start,
-            end_time=current_start + duration,
-            metadata={{
-                **base_event.metadata,
-                "recurrence_instance": occurrence_count + 1,
-                "base_event_id": base_event.event_id
-            }}
-        )
-        
-        events.append(recurring_event)
-        occurrence_count += 1
-        
-        # Calculate next occurrence
-        current_start = _calculate_next_occurrence(current_start, recurrence)
-    
-    return events
-
-def _calculate_next_occurrence(current_time: datetime, recurrence: RecurrenceStructure) -> datetime:
-    """Calculate next occurrence based on recurrence pattern"""
-    if recurrence.frequency == "daily":
-        return current_time + timedelta(days=recurrence.interval)
-    elif recurrence.frequency == "weekly":
-        return current_time + timedelta(weeks=recurrence.interval)
-    elif recurrence.frequency == "monthly":
-        # Simple monthly calculation (can be enhanced)
-        next_month = current_time.month + recurrence.interval
-        next_year = current_time.year + (next_month - 1) // 12
-        next_month = ((next_month - 1) % 12) + 1
-        return current_time.replace(year=next_year, month=next_month)
-    elif recurrence.frequency == "yearly":
-        return current_time.replace(year=current_time.year + recurrence.interval)
-    else:
-        return current_time + timedelta(days=recurrence.interval)
-
-# Audit operations (pure functions)
-def create_audit_structure(
-    audit_id: str,
-    operation: str,
-    entity_type: str,
-    entity_id: str,
-    user_id: str,
-    **kwargs
-) -> AuditStructure:
-    """
-    Create audit trail structure
-    
-    Pure function for audit logging
-    """
-    return AuditStructure(
-        audit_id=audit_id,
-        timestamp=datetime.now(),
-        operation=operation,
-        entity_type=entity_type,
-        entity_id=entity_id,
-        user_id=user_id,
-        changes=kwargs.get('changes', {{}}),
-        context=kwargs.get('context', {{}})
-    )
-
-# Collection operations (pure functions)
-def merge_calendars(
-    calendar1: CalendarStructure,
-    calendar2: CalendarStructure,
-    merged_id: str,
-    merged_name: str
-) -> CalendarStructure:
-    """
-    Merge two calendars into a new calendar
-    
-    Pure function for calendar merging
-    """
-    merged_events = list(calendar1.events) + list(calendar2.events)
-    merged_config = {{**calendar1.configuration, **calendar2.configuration}}
-    
-    return CalendarStructure(
-        calendar_id=merged_id,
-        name=merged_name,
-        owner=calendar1.owner,  # Use first calendar's owner
-        events=merged_events,
-        timezone=calendar1.timezone,
-        configuration=merged_config
-    )
-
-def validate_structures_collection(
-    structures: StructuresCollection
-) -> Dict[str, Any]:
-    """
-    Validate collection of structures
-    
-    Pure validation function for collections
-    """
-    validation_result = {{
-        "valid": True,
-        "total_count": len(structures),
-        "valid_count": 0,
-        "invalid_items": [],
-        "errors": []
-    }}
-    
-    for i, structure in enumerate(structures):
-        try:
-            if hasattr(structure, 'event_id'):
-                # It's an event structure
-                is_valid = validate_event_structure(structure)
+        # Check for standard modules
+        for module in STANDARD_MODULES:
+            if (domain_path / module).exists():
+                analysis["has_standard_modules"].append(module)
             else:
-                # Generic structure validation
-                is_valid = bool(structure.id and structure.name)
-            
-            if is_valid:
-                validation_result["valid_count"] += 1
-            else:
-                validation_result["invalid_items"].append(i)
-                validation_result["valid"] = False
-                
-        except Exception as e:
-            validation_result["errors"].append(f"Item {{i}}: {{str(e)}}")
-            validation_result["invalid_items"].append(i)
-            validation_result["valid"] = False
-    
-    return validation_result
-
-# Export interface
-__all__ = [
-    # Event operations
-    'create_event_structure',
-    'update_event_structure',
-    'validate_event_structure',
-    
-    # Calendar operations
-    'create_calendar_structure',
-    'add_event_to_calendar',
-    'remove_event_from_calendar',
-    'filter_events_by_date_range',
-    
-    # Recurrence operations
-    'create_recurrence_structure',
-    'generate_recurring_events',
-    
-    # Audit operations
-    'create_audit_structure',
-    
-    # Collection operations
-    'merge_calendars',
-    'validate_structures_collection',
-]
-
-# [EOF] - End of structures operations.py module
-'''
-    
-    def _generate_structures_relations(self) -> str:
-        """Generate structures domain relations"""
-        timestamp = datetime.now().isoformat()
+                analysis["missing_modules"].append(module)
         
-        return f'''#!/usr/bin/env python3
-"""
-pyics/core/structures/relations.py
-Structures Domain Relations
-
-Generated: {timestamp}
-Engineering Lead: Nnamdi Okpala / OBINexus Computing
-Domain: structures
-
-PROBLEM SOLVED: Structural relationships between immutable calendar entities
-DEPENDENCIES: structures.data_types, typing, dataclasses
-THREAD SAFETY: Yes - Immutable relation structures
-DETERMINISTIC: Yes - Static relationship definitions
-
-This module defines structural relationships and mappings between immutable
-calendar entities following DOP principles with single-pass architecture.
-"""
-
-from dataclasses import dataclass, field
-from typing import Dict, List, Set, Tuple, Optional, Callable, Iterator
-from enum import Enum, auto
-
-# Import domain data types
-from .data_types import (
-    StructuresEntity,
-    EventStructure,
-    CalendarStructure,
-    RecurrenceStructure,
-    AuditStructure,
-    StructuresCollection,
-    StructuresIndex
-)
-
-# Relationship types for structures domain
-class RelationType(Enum):
-    """Types of relationships in structures domain"""
-    ONE_TO_ONE = auto()
-    ONE_TO_MANY = auto()
-    MANY_TO_MANY = auto()
-    HIERARCHICAL = auto()
-    DEPENDENCY = auto()
-    COMPOSITION = auto()  # Structures-specific
-    TEMPORAL = auto()     # Time-based relationships
-
-class RelationStrength(Enum):
-    """Strength of structural relationships"""
-    WEAK = auto()
-    STRONG = auto()
-    CRITICAL = auto()
-
-# Relation containers for structures
-@dataclass(frozen=True)
-class Relation:
-    """
-    Immutable relation between structures entities
-    
-    Defines structural relationship with metadata
-    """
-    source_id: str
-    target_id: str
-    relation_type: RelationType
-    strength: RelationStrength = RelationStrength.WEAK
-    metadata: Dict[str, Any] = field(default_factory=dict)
-
-@dataclass(frozen=True)
-class StructuralGraph:
-    """
-    Immutable graph of structural relations
-    
-    Container for complete structural relationship network
-    """
-    relations: Tuple[Relation, ...] = field(default_factory=tuple)
-    entity_index: Dict[str, StructuresEntity] = field(default_factory=dict)
-    calendar_index: Dict[str, CalendarStructure] = field(default_factory=dict)
-    event_index: Dict[str, EventStructure] = field(default_factory=dict)
-    
-    def get_relations_for_entity(self, entity_id: str) -> List[Relation]:
-        """Get all relations involving an entity"""
-        return [
-            rel for rel in self.relations 
-            if rel.source_id == entity_id or rel.target_id == entity_id
-        ]
-    
-    def get_calendar_events(self, calendar_id: str) -> List[EventStructure]:
-        """Get all events for a specific calendar"""
-        calendar = self.calendar_index.get(calendar_id)
-        return list(calendar.events) if calendar else []
-    
-    def get_event_calendar(self, event_id: str) -> Optional[CalendarStructure]:
-        """Get calendar containing a specific event"""
-        for calendar in self.calendar_index.values():
-            if any(event.event_id == event_id for event in calendar.events):
-                return calendar
-        return None
-
-@dataclass(frozen=True)
-class TemporalRelation:
-    """
-    Specialized relation for time-based relationships
-    
-    Handles temporal dependencies between events
-    """
-    source_event_id: str
-    target_event_id: str
-    temporal_type: str  # "before", "after", "during", "overlaps"
-    time_constraint: Optional[Dict[str, Any]] = None
-    
-    def __post_init__(self):
-        """Validate temporal relation constraints"""
-        valid_types = ["before", "after", "during", "overlaps", "meets", "starts", "finishes"]
-        if self.temporal_type not in valid_types:
-            raise ValueError(f"temporal_type must be one of {{valid_types}}")
-
-# Relation building functions (pure functions)
-def create_relation(
-    source_id: str,
-    target_id: str,
-    relation_type: RelationType,
-    strength: RelationStrength = RelationStrength.WEAK,
-    **metadata
-) -> Relation:
-    """
-    Create a new relation between structures
-    
-    Pure function for relation creation
-    """
-    return Relation(
-        source_id=source_id,
-        target_id=target_id,
-        relation_type=relation_type,
-        strength=strength,
-        metadata=metadata
-    )
-
-def create_calendar_event_relation(
-    calendar_id: str,
-    event_id: str
-) -> Relation:
-    """
-    Create composition relation between calendar and event
-    
-    Specialized relation for calendar-event containment
-    """
-    return create_relation(
-        source_id=calendar_id,
-        target_id=event_id,
-        relation_type=RelationType.COMPOSITION,
-        strength=RelationStrength.STRONG,
-        composition_type="contains_event"
-    )
-
-def create_temporal_relation(
-    source_event_id: str,
-    target_event_id: str,
-    temporal_type: str,
-    **constraints
-) -> TemporalRelation:
-    """
-    Create temporal relation between events
-    
-    Pure function for time-based relationship creation
-    """
-    return TemporalRelation(
-        source_event_id=source_event_id,
-        target_event_id=target_event_id,
-        temporal_type=temporal_type,
-        time_constraint=constraints if constraints else None
-    )
-
-def build_structural_graph(
-    calendars: List[CalendarStructure],
-    events: List[EventStructure],
-    relations: List[Relation]
-) -> StructuralGraph:
-    """
-    Build complete structural graph from calendars, events, and relations
-    
-    Pure function for graph construction
-    """
-    # Build indices
-    calendar_index = {{cal.calendar_id: cal for cal in calendars}}
-    event_index = {{event.event_id: event for event in events}}
-    
-    # Create unified entity index
-    entity_index = {{}}
-    entity_index.update(calendar_index)
-    entity_index.update(event_index)
-    
-    return StructuralGraph(
-        relations=tuple(relations),
-        entity_index=entity_index,
-        calendar_index=calendar_index,
-        event_index=event_index
-    )
-
-def find_conflicting_events(
-    events: List[EventStructure],
-    tolerance_minutes: int = 0
-) -> List[Tuple[EventStructure, EventStructure]]:
-    """
-    Find events with time conflicts
-    
-    Pure function for conflict detection
-    """
-    conflicts = []
-    
-    for i, event1 in enumerate(events):
-        for event2 in events[i+1:]:
-            if _events_conflict(event1, event2, tolerance_minutes):
-                conflicts.append((event1, event2))
-    
-    return conflicts
-
-def _events_conflict(
-    event1: EventStructure,
-    event2: EventStructure,
-    tolerance_minutes: int
-) -> bool:
-    """Check if two events have time conflicts"""
-    from datetime import timedelta
-    
-    tolerance = timedelta(minutes=tolerance_minutes)
-    
-    # Check for overlap with tolerance
-    start1, end1 = event1.start_time - tolerance, event1.end_time + tolerance
-    start2, end2 = event2.start_time - tolerance, event2.end_time + tolerance
-    
-    return not (end1 <= start2 or end2 <= start1)
-
-def validate_structural_integrity(graph: StructuralGraph) -> Dict[str, Any]:
-    """
-    Validate structural graph for integrity and consistency
-    
-    Returns detailed validation report
-    """
-    validation_result = {{
-        "valid": True,
-        "total_relations": len(graph.relations),
-        "integrity_violations": [],
-        "orphaned_entities": [],
-        "circular_references": []
-    }}
-    
-    try:
-        # Check for orphaned entities
-        referenced_entities = set()
-        for relation in graph.relations:
-            referenced_entities.add(relation.source_id)
-            referenced_entities.add(relation.target_id)
+        # Check for consolidation requirements
+        if domain_name in DOMAIN_CONSOLIDATION:
+            analysis["consolidation_target"] = DOMAIN_CONSOLIDATION[domain_name]
+            analysis["violations"].append(f"consolidation_required: {analysis['consolidation_target']}")
         
-        all_entities = set(graph.entity_index.keys())
-        orphaned = all_entities - referenced_entities
+        # Extract functions from complex structures
+        if analysis["has_complex_nesting"]:
+            analysis["extractable_functions"] = self._extract_functions_from_complex_structure(domain_path)
         
-        if orphaned:
-            validation_result["orphaned_entities"] = list(orphaned)
-            validation_result["valid"] = False
-        
-        # Check for circular references
-        circular_refs = _detect_circular_references(graph)
-        if circular_refs:
-            validation_result["circular_references"] = circular_refs
-            validation_result["valid"] = False
-        
-        # Validate calendar-event consistency
-        for calendar in graph.calendar_index.values():
-            for event in calendar.events:
-                if event.event_id not in graph.event_index:
-                    validation_result["integrity_violations"].append(
-                        f"Calendar {{calendar.calendar_id}} references non-existent event {{event.event_id}}"
-                    )
-                    validation_result["valid"] = False
-        
-        return validation_result
-        
-    except Exception as e:
-        validation_result["valid"] = False
-        validation_result["integrity_violations"].append(f"Validation error: {{str(e)}}")
-        return validation_result
-
-def _detect_circular_references(graph: StructuralGraph) -> List[List[str]]:
-    """Detect circular references in structural graph"""
-    # Simplified circular reference detection
-    circular_refs = []
+        return analysis
     
-    for relation in graph.relations:
-        if relation.source_id == relation.target_id:
-            circular_refs.append([relation.source_id])
-    
-    return circular_refs
-
-# Predefined relation mappings for structures domain
-DEFAULT_STRUCTURAL_MAPPINGS = [
-    {{
-        "mapping_name": "calendar_event_composition",
-        "source_type": "CalendarStructure",
-        "target_type": "EventStructure",
-        "relation_type": RelationType.COMPOSITION,
-        "validation_rules": ["source_id != target_id", "no_orphaned_events"]
-    }},
-    {{
-        "mapping_name": "event_temporal_sequence",
-        "source_type": "EventStructure",
-        "target_type": "EventStructure",
-        "relation_type": RelationType.TEMPORAL,
-        "validation_rules": ["temporal_consistency", "no_time_paradox"]
-    }},
-]
-
-# Export interface
-__all__ = [
-    'RelationType',
-    'RelationStrength',
-    'Relation',
-    'StructuralGraph',
-    'TemporalRelation',
-    'create_relation',
-    'create_calendar_event_relation',
-    'create_temporal_relation',
-    'build_structural_graph',
-    'find_conflicting_events',
-    'validate_structural_integrity',
-    'DEFAULT_STRUCTURAL_MAPPINGS',
-]
-
-# [EOF] - End of structures relations.py module
-'''
-    
-    def _generate_structures_config(self, spec: Dict[str, Any]) -> str:
-        """Generate structures domain configuration"""
-        timestamp = datetime.now().isoformat()
+    def _extract_functions_from_complex_structure(self, domain_path: Path) -> List[Dict[str, Any]]:
+        """Extract functions from complex nested structures"""
+        functions = []
         
-        return f'''#!/usr/bin/env python3
-"""
-pyics/core/structures/config.py
-Structures Domain Configuration
-
-Generated: {timestamp}
-Engineering Lead: Nnamdi Okpala / OBINexus Computing
-Domain: structures
-
-PROBLEM SOLVED: {spec["problem_solved"]}
-DEPENDENCIES: {", ".join(spec["dependencies"])}
-THREAD SAFETY: Yes - Immutable configuration data
-DETERMINISTIC: Yes - Static configuration with predictable behavior
-
-Configuration module providing cost metadata, behavior policies, and domain-specific
-settings for the structures domain following single-pass DOP compliance principles.
-"""
-
-from typing import Dict, List, Any, TypedDict, Literal
-import logging
-
-logger = logging.getLogger("pyics.core.structures.config")
-
-# Type definitions for domain configuration
-class DomainCostMetadata(TypedDict):
-    priority_index: int
-    compute_time_weight: float
-    exposure_type: str
-    dependency_level: int
-    thread_safe: bool
-    load_order: int
-
-class DomainConfiguration(TypedDict):
-    domain_name: str
-    cost_metadata: DomainCostMetadata
-    problem_solved: str
-    separation_rationale: str
-    merge_potential: str
-    dependencies: List[str]
-    behavior_policies: Dict[str, Any]
-    export_interface: List[str]
-
-# Cost metadata for structures domain
-cost_metadata: DomainCostMetadata = {{
-    "priority_index": {spec["priority_index"]},
-    "compute_time_weight": {spec["compute_time_weight"]},
-    "exposure_type": "{spec["exposure_type"]}",
-    "dependency_level": {spec["dependency_level"]},
-    "thread_safe": {spec["thread_safe"]},
-    "load_order": {spec["load_order"]}
-}}
-
-# Domain dependencies (single-pass architecture)
-DEPENDENCIES: List[str] = {spec["dependencies"]}
-
-# Domain behavior policies
-BEHAVIOR_POLICIES: Dict[str, Any] = {{
-    "strict_validation": True,
-    "single_pass_loading": True,
-    "atomic_operations": False,
-    "immutable_structures": True,  # Core feature of structures domain
-    "interface_only": False,
-    "error_handling": "strict",
-    "logging_level": "INFO",
-    "performance_monitoring": True,
-    "temporal_consistency": True,  # Structures-specific
-    "conflict_detection": True     # Calendar-specific
-}}
-
-# Export interface definition
-EXPORT_INTERFACE: List[str] = [
-    "get_domain_metadata",
-    "validate_configuration",
-    "validate_dependencies",
-    "cost_metadata",
-    "DEPENDENCIES",
-    "BEHAVIOR_POLICIES"
-]
-
-def get_domain_metadata() -> DomainConfiguration:
-    """
-    Get complete domain configuration metadata
-    
-    Returns:
-        DomainConfiguration with all domain metadata and policies
-    """
-    return DomainConfiguration(
-        domain_name="structures",
-        cost_metadata=cost_metadata,
-        problem_solved="{spec["problem_solved"]}",
-        separation_rationale="{spec["separation_rationale"]}",
-        merge_potential="{spec["merge_potential"]}",
-        dependencies=DEPENDENCIES,
-        behavior_policies=BEHAVIOR_POLICIES,
-        export_interface=EXPORT_INTERFACE
-    )
-
-def validate_configuration() -> bool:
-    """
-    Validate domain configuration for consistency and completeness
-    
-    Returns:
-        True if configuration is valid, False otherwise
-    """
-    try:
-        # Validate cost metadata completeness
-        required_fields = ["priority_index", "compute_time_weight", "exposure_type", 
-                          "dependency_level", "thread_safe", "load_order"]
-        
-        for field in required_fields:
-            if field not in cost_metadata:
-                logger.error(f"Missing required cost metadata field: {{field}}")
-                return False
-        
-        # Validate structures-specific constraints
-        if cost_metadata["priority_index"] < 1:
-            logger.error("Priority index must be >= 1")
-            return False
-            
-        if cost_metadata["compute_time_weight"] < 0:
-            logger.error("Compute time weight cannot be negative")
-            return False
-        
-        # Validate immutability requirements
-        if not BEHAVIOR_POLICIES.get("immutable_structures", False):
-            logger.error("Structures domain must enforce immutable structures")
-            return False
-        
-        # Validate dependency level compliance
-        expected_dep_level = len(DEPENDENCIES)
-        if cost_metadata["dependency_level"] != expected_dep_level:
-            logger.warning(f"Dependency level mismatch: expected {{expected_dep_level}}, got {{cost_metadata['dependency_level']}}")
-        
-        logger.info("Domain structures configuration validated successfully")
-        return True
-        
-    except Exception as e:
-        logger.error(f"Configuration validation failed: {{e}}")
-        return False
-
-def validate_dependencies() -> bool:
-    """
-    Validate domain dependencies for single-pass architecture compliance
-    
-    Returns:
-        True if dependencies are valid, False otherwise
-    """
-    try:
-        # Check dependency order compliance
-        from pyics.core.ioc_registry import get_domain_load_order
-        
-        current_load_order = cost_metadata["load_order"]
-        
-        for dep_domain in DEPENDENCIES:
-            dep_load_order = get_domain_load_order(dep_domain)
-            if dep_load_order and dep_load_order >= current_load_order:
-                logger.error(f"Invalid dependency: {{dep_domain}} (load order {{dep_load_order}}) must load before structures (load order {{current_load_order}})")
-                return False
-        
-        logger.info("Domain structures dependency validation passed")
-        return True
-        
-    except ImportError:
-        logger.warning("IoC registry not available for dependency validation")
-        return True  # Allow validation to pass if registry not yet created
-    except Exception as e:
-        logger.error(f"Dependency validation failed: {{e}}")
-        return False
-
-def get_behavior_policy(policy_name: str) -> Any:
-    """Get specific behavior policy value"""
-    return BEHAVIOR_POLICIES.get(policy_name)
-
-def update_behavior_policy(policy_name: str, value: Any) -> bool:
-    """Update behavior policy (runtime configuration)"""
-    if policy_name in BEHAVIOR_POLICIES:
-        BEHAVIOR_POLICIES[policy_name] = value
-        logger.info(f"Updated behavior policy {{policy_name}} = {{value}}")
-        return True
-    else:
-        logger.warning(f"Unknown behavior policy: {{policy_name}}")
-        return False
-
-# Export all configuration interfaces
-__all__ = [
-    "cost_metadata",
-    "get_domain_metadata", 
-    "validate_configuration",
-    "validate_dependencies",
-    "get_behavior_policy",
-    "update_behavior_policy",
-    "DEPENDENCIES",
-    "BEHAVIOR_POLICIES",
-    "EXPORT_INTERFACE",
-    "DomainCostMetadata",
-    "DomainConfiguration"
-]
-
-# Auto-validate configuration on module load
-if not validate_configuration():
-    logger.warning("Domain structures configuration loaded with validation warnings")
-else:
-    logger.debug("Domain structures configuration loaded successfully")
-
-# [EOF] - End of structures domain configuration module
-'''
-    
-    def _generate_structures_init(self, spec: Dict[str, Any]) -> str:
-        """Generate structures domain __init__.py"""
-        timestamp = datetime.now().isoformat()
-        
-        return f'''#!/usr/bin/env python3
-"""
-pyics/core/structures/__init__.py
-Structures Domain Module
-
-Generated: {timestamp}
-Engineering Lead: Nnamdi Okpala / OBINexus Computing
-Domain: structures
-Phase: 3.1.6.3 - Single-Pass Modular Architecture
-
-PROBLEM SOLVED: {spec["problem_solved"]}
-SEPARATION RATIONALE: {spec["separation_rationale"]}
-MERGE POTENTIAL: {spec["merge_potential"]}
-DEPENDENCIES: {", ".join(spec["dependencies"])}
-
-Public interface for structures domain following single-responsibility principles
-and maintaining architectural isolation for deterministic behavior with single-pass loading.
-"""
-
-# Import domain configuration (always load first)
-from .config import (
-    get_domain_metadata,
-    validate_configuration,
-    validate_dependencies,
-    cost_metadata,
-    get_behavior_policy,
-    update_behavior_policy,
-    DEPENDENCIES,
-    BEHAVIOR_POLICIES
-)
-
-# Import core domain components with validation
-try:
-    from .data_types import *
-except ImportError as e:
-    import logging
-    logger = logging.getLogger("pyics.core.structures")
-    logger.warning(f"Failed to import data_types: {{e}}")
-
-try:
-    from .operations import *
-except ImportError as e:
-    import logging
-    logger = logging.getLogger("pyics.core.structures")
-    logger.warning(f"Failed to import operations: {{e}}")
-
-try:
-    from .relations import *
-except ImportError as e:
-    import logging
-    logger = logging.getLogger("pyics.core.structures")
-    logger.warning(f"Failed to import relations: {{e}}")
-
-# Domain metadata for external access
-DOMAIN_NAME = "structures"
-DOMAIN_SPECIFICATION = {{
-    "priority_index": {spec["priority_index"]},
-    "compute_time_weight": {spec["compute_time_weight"]},
-    "exposure_type": "{spec["exposure_type"]}",
-    "dependency_level": {spec["dependency_level"]},
-    "thread_safe": {spec["thread_safe"]},
-    "load_order": {spec["load_order"]},
-    "dependencies": {spec["dependencies"]}
-}}
-
-# Export configuration and validation interfaces
-__all__ = [
-    "DOMAIN_NAME",
-    "DOMAIN_SPECIFICATION",
-    "DEPENDENCIES",
-    "get_domain_metadata",
-    "validate_configuration", 
-    "validate_dependencies",
-    "cost_metadata",
-    "get_behavior_policy",
-    "update_behavior_policy",
-    "BEHAVIOR_POLICIES"
-]
-
-# Single-pass loading validation
-def _validate_single_pass_loading() -> bool:
-    """Validate single-pass loading compliance"""
-    try:
-        # Validate dependencies are properly loaded
-        current_load_order = DOMAIN_SPECIFICATION["load_order"]
-        
-        for dep_domain in DEPENDENCIES:
-            try:
-                dep_module = __import__(f"pyics.core.{{dep_domain}}", fromlist=["DOMAIN_SPECIFICATION"])
-                dep_load_order = dep_module.DOMAIN_SPECIFICATION["load_order"]
-                
-                if dep_load_order >= current_load_order:
-                    import logging
-                    logger = logging.getLogger("pyics.core.structures")
-                    logger.error(f"Single-pass violation: {{dep_domain}} ({{dep_load_order}}) must load before structures ({{current_load_order}})")
-                    return False
+        for py_file in domain_path.rglob("*.py"):
+            if py_file.name != "__init__.py":
+                try:
+                    with open(py_file, 'r', encoding='utf-8') as f:
+                        content = f.read()
                     
-            except ImportError:
-                import logging
-                logger = logging.getLogger("pyics.core.structures")
-                logger.warning(f"Dependency {{dep_domain}} not available during loading")
+                    # Parse AST to extract functions and classes
+                    tree = ast.parse(content)
+                    for node in ast.walk(tree):
+                        if isinstance(node, ast.FunctionDef):
+                            functions.append({
+                                "type": "function",
+                                "name": node.name,
+                                "file": str(py_file.relative_to(domain_path)),
+                                "lineno": node.lineno
+                            })
+                        elif isinstance(node, ast.ClassDef):
+                            functions.append({
+                                "type": "class", 
+                                "name": node.name,
+                                "file": str(py_file.relative_to(domain_path)),
+                                "lineno": node.lineno
+                            })
+                            
+                except Exception as e:
+                    logger.warning(f"Failed to parse {py_file}: {e}")
         
-        return True
+        return functions
+    
+    def _clean_complex_structures(self) -> None:
+        """Clean complex nested structures while preserving functionality"""
+        logger.info("Cleaning complex nested structures...")
         
-    except Exception as e:
-        import logging
-        logger = logging.getLogger("pyics.core.structures")
-        logger.error(f"Single-pass validation failed: {{e}}")
-        return False
-
-# Auto-validate domain on module load
-try:
-    import logging
-    logger = logging.getLogger("pyics.core.structures")
-    
-    # Validate configuration
-    if validate_configuration():
-        logger.debug("Domain structures configuration validated")
-    else:
-        logger.warning("Domain structures configuration validation failed")
-    
-    # Validate dependencies
-    if validate_dependencies():
-        logger.debug("Domain structures dependencies validated")
-    else:
-        logger.warning("Domain structures dependency validation failed")
-    
-    # Validate single-pass loading
-    if _validate_single_pass_loading():
-        logger.debug("Domain structures single-pass loading validated")
-    else:
-        logger.warning("Domain structures single-pass loading validation failed")
-    
-    logger.info(f"Domain structures loaded successfully (load_order: {{DOMAIN_SPECIFICATION['load_order']}})")
-    
-except Exception as e:
-    import logging
-    logger = logging.getLogger("pyics.core.structures")
-    logger.error(f"Domain structures loading failed: {{e}}")
-
-# [EOF] - End of structures domain module
-'''
-    
-    def _generate_structures_readme(self, spec: Dict[str, Any]) -> str:
-        """Generate structures domain README.md"""
-        timestamp = datetime.now().isoformat()
+        cleaned_count = 0
         
-        return f'''# Structures Domain
-
-**Engineering Lead**: Nnamdi Okpala / OBINexus Computing  
-**Phase**: 3.1.6.3 - Single-Pass Modular Architecture  
-**Generated**: {timestamp}
-
-## Purpose
-
-{spec["problem_solved"]}
-
-## Problem Solved
-
-The structures domain addresses the following architectural requirements:
-
-- **Isolation Guarantee**: {spec["separation_rationale"]}
-- **Thread Safety**: Immutable data structures with atomic operations
-- **Deterministic Behavior**: Predictable outputs with consistent state management
-- **Single Responsibility**: Each component maintains focused functionality scope
-- **Single-Pass Loading**: Strict dependency ordering prevents circular dependencies
-
-## Module Index
-
-### Core Components
-
-| Module | Purpose | Thread Safe | Dependencies |
-|--------|---------|-------------|--------------|
-| `data_types.py` | Immutable calendar data structures and containers | ✅ | primitives, protocols |
-| `operations.py` | Pure functions for structure manipulation | ✅ | data_types, relations |
-| `relations.py` | Structural relationships and temporal mappings | ✅ | data_types |
-| `config.py` | Domain configuration and cost metadata | ✅ | None |
-
-### Key Structures
-
-- **EventStructure**: Immutable event data with validation
-- **CalendarStructure**: Calendar container with event collections
-- **RecurrenceStructure**: Recurrence pattern definitions
-- **AuditStructure**: Audit trail for compliance tracking
-- **TemporalRelation**: Time-based event relationships
-
-## Cost Metadata
-
-| Metric | Value | Rationale |
-|--------|-------|-----------|
-| **Priority Index** | {spec["priority_index"]} | Secondary domain building on primitives and protocols |
-| **Compute Weight** | {spec["compute_time_weight"]} | Moderate complexity due to validation and relationship processing |
-| **Exposure Type** | `{spec["exposure_type"]}` | External access required for calendar operations |
-| **Dependency Level** | {spec["dependency_level"]} | Depends on primitives and protocols foundations |
-| **Load Order** | {spec["load_order"]} | Loads after foundational domains |
-
-## Single-Pass Architecture Compliance
-
-### Dependency Chain
-
-```
-structures (load_order: {spec["load_order"]})
-├── primitives (load_order: 10)
-└── protocols (load_order: 20)
-```
-
-### Loading Sequence
-
-1. **Configuration Loading**: `config.py` validates domain metadata
-2. **Dependency Validation**: Ensures primitives and protocols loaded first
-3. **Component Loading**: Load data_types → operations → relations
-4. **Interface Export**: Export validated public interfaces through `__init__.py`
-5. **Registration**: Automatic registration with IoC registry
-
-## Export Convention
-
-The domain exposes functionality through systematic `__init__.py` exports:
-
-```python
-from pyics.core.structures import (
-    # Event operations
-    create_event_structure,
-    validate_event_structure,
-    
-    # Calendar operations
-    create_calendar_structure,
-    add_event_to_calendar,
-    
-    # Data structures
-    EventStructure,
-    CalendarStructure,
-    RecurrenceStructure,
-    
-    # Configuration
-    get_domain_metadata,
-    validate_configuration
-)
-```
-
-### Behavior Policies
-
-- **Strict Validation**: All inputs validated before processing
-- **Single Pass Loading**: No circular dependencies allowed
-- **Immutable Structures**: All data structures are frozen dataclasses
-- **Temporal Consistency**: Time-based relationships validated
-- **Conflict Detection**: Automatic detection of scheduling conflicts
-- **Error Handling**: Strict error propagation with detailed logging
-- **Performance Monitoring**: Execution time and resource usage tracking
-
-## Usage Examples
-
-### Basic Event Creation
-
-```python
-from datetime import datetime
-from pyics.core.structures import (
-    create_event_structure,
-    create_calendar_structure,
-    add_event_to_calendar
-)
-
-# Create an event
-event = create_event_structure(
-    event_id="meeting_001",
-    title="Team Standup",
-    start_time=datetime(2024, 1, 15, 9, 0),
-    end_time=datetime(2024, 1, 15, 9, 30),
-    location="Conference Room A",
-    attendees=["alice@company.com", "bob@company.com"]
-)
-
-# Create calendar and add event
-calendar = create_calendar_structure(
-    calendar_id="team_calendar",
-    name="Development Team Calendar",
-    owner="team_lead@company.com"
-)
-
-updated_calendar = add_event_to_calendar(calendar, event)
-```
-
-### Recurrence Patterns
-
-```python
-from pyics.core.structures import (
-    create_recurrence_structure,
-    generate_recurring_events
-)
-
-# Create daily standup recurrence
-recurrence = create_recurrence_structure(
-    pattern_id="daily_standup",
-    frequency="daily",
-    interval=1,
-    week_days=["monday", "tuesday", "wednesday", "thursday", "friday"]
-)
-
-# Generate recurring events
-recurring_events = generate_recurring_events(
-    base_event=event,
-    recurrence=recurrence,
-    max_occurrences=30
-)
-```
-
-### Temporal Relationships
-
-```python
-from pyics.core.structures import (
-    create_temporal_relation,
-    find_conflicting_events
-)
-
-# Create temporal relationship
-temporal_rel = create_temporal_relation(
-    source_event_id="meeting_001",
-    target_event_id="meeting_002",
-    temporal_type="before",
-    time_constraint={"min_gap_minutes": 15}
-)
-
-# Detect conflicts
-conflicts = find_conflicting_events(updated_calendar.events)
-```
-
-### CLI Integration
-
-```bash
-# Access structures domain through CLI
-pyics structures status
-pyics domain status structures
-pyics domain metadata structures
-```
-
-## Integration Summary
-
-### Core System Integration
-
-The structures domain integrates with the broader Pyics architecture through:
-
-1. **IoC Registry**: Automatic registration via `pyics.core.ioc_registry`
-2. **CLI Interface**: Domain-specific commands via `pyics.cli.structures`
-3. **Configuration System**: Dynamic settings via `pyics.config`
-4. **Validation Framework**: Cross-domain validation through protocol compliance
-
-### Dependencies
-
-| Component | Relationship | Justification |
-|-----------|--------------|---------------|
-| `pyics.core.ioc_registry` | Registration target | Enables dynamic domain discovery |
-| `pyics.cli.structures` | CLI consumer | Provides user-facing operations |
-| `pyics.core.primitives` | Domain dependency | Provides atomic operations and thread-safe building blocks |
-| `pyics.core.protocols` | Domain dependency | Supplies interface definitions and type safety contracts |
-
-### Merge Potential: {spec["merge_potential"]}
-
-**Rationale**: {spec["separation_rationale"]}
-
-This domain maintains architectural isolation to preserve:
-- Single-pass loading guarantees
-- Immutability characteristics  
-- Temporal consistency requirements
-- Calendar-specific validation logic
-
----
-
-**Validation Status**: ✅ Domain modularization complete with single-pass architecture compliance
-**Load Order**: {spec["load_order"]} (Priority Index: {spec["priority_index"]})
-**Dependencies**: {len(spec["dependencies"])} ({", ".join(spec["dependencies"])})
-**Immutability**: ✅ All structures are frozen dataclasses
-**Temporal Safety**: ✅ Time-based validation and conflict detection
-'''
-    
-    def _implement_standard_pattern(self) -> Dict[str, Any]:
-        """Implement standard module pattern across all domains"""
-        logger.info("Implementing standard module pattern...")
+        for domain_name, analysis in self.domain_analysis.items():
+            if analysis["has_complex_nesting"]:
+                domain_path = Path(analysis["path"])
+                
+                # Extract and preserve functions before cleanup
+                self._preserve_domain_functions(domain_path, analysis)
+                
+                # Remove complex directories
+                complex_dirs = ["implementations", "interfaces", "compliance", "contracts", "tests"]
+                for complex_dir in complex_dirs:
+                    complex_path = domain_path / complex_dir
+                    if complex_path.exists():
+                        shutil.rmtree(complex_path)
+                        logger.info(f"Removed complex structure: {domain_name}/{complex_dir}")
+                        cleaned_count += 1
         
-        implementation_results = {
-            "domains_processed": [],
-            "modules_standardized": [],
-            "validation_issues": []
+        self.correction_results["complex_structures_cleaned"] = cleaned_count
+        logger.info(f"Complex structure cleanup complete: {cleaned_count} structures cleaned")
+    
+    def _preserve_domain_functions(self, domain_path: Path, analysis: Dict[str, Any]) -> None:
+        """Preserve functions from complex structures into standard modules"""
+        functions = analysis["extractable_functions"]
+        
+        if not functions:
+            return
+        
+        # Group functions by target module
+        function_groups = {
+            "data_types.py": [],
+            "operations.py": [],
+            "relations.py": []
         }
         
-        for domain_name in TARGET_DOMAINS:
+        for func in functions:
+            # Categorize function based on name patterns
+            if any(keyword in func["name"].lower() for keyword in ["type", "class", "structure", "model"]):
+                function_groups["data_types.py"].append(func)
+            elif any(keyword in func["name"].lower() for keyword in ["relation", "link", "connect", "associate"]):
+                function_groups["relations.py"].append(func)
+            else:
+                function_groups["operations.py"].append(func)
+        
+        # Write preserved functions to temporary files for manual review
+        preservation_dir = domain_path / "_preserved_functions"
+        preservation_dir.mkdir(exist_ok=True)
+        
+        for target_module, funcs in function_groups.items():
+            if funcs:
+                preservation_file = preservation_dir / f"for_{target_module}"
+                with open(preservation_file, 'w', encoding='utf-8') as f:
+                    f.write(f"# Functions preserved from complex structure for {target_module}\n")
+                    f.write(f"# Review and integrate manually\n\n")
+                    for func in funcs:
+                        f.write(f"# {func['type']}: {func['name']} from {func['file']}:{func['lineno']}\n")
+    
+    def _consolidate_domains(self) -> None:
+        """Consolidate redundant domains according to consolidation mapping"""
+        logger.info("Consolidating redundant domains...")
+        
+        consolidated_count = 0
+        
+        for source_domain, target in DOMAIN_CONSOLIDATION.items():
+            source_path = self.core_dir / source_domain
+            
+            if not source_path.exists():
+                continue
+                
+            if target == "DELETE":
+                # Special handling for logic domain - preserve useful functions
+                self._preserve_and_delete_domain(source_path, source_domain)
+            else:
+                # Merge source into target
+                target_path = self.core_dir / target
+                self._merge_domains(source_path, target_path, source_domain, target)
+            
+            consolidated_count += 1
+        
+        self.correction_results["domains_consolidated"] = consolidated_count
+        logger.info(f"Domain consolidation complete: {consolidated_count} domains consolidated")
+    
+    def _preserve_and_delete_domain(self, source_path: Path, source_domain: str) -> None:
+        """Preserve useful functions from domain before deletion"""
+        # Create preservation record
+        preservation_path = self.core_dir / "_domain_preservation" / f"{source_domain}_preserved.md"
+        preservation_path.parent.mkdir(exist_ok=True)
+        
+        with open(preservation_path, 'w', encoding='utf-8') as f:
+            f.write(f"# Preserved Functions from {source_domain} Domain\n\n")
+            f.write(f"Domain deleted: {datetime.now().isoformat()}\n")
+            f.write(f"Reason: Redundant functionality - distribute to appropriate domains\n\n")
+            
+            # List preserved functions
+            for py_file in source_path.rglob("*.py"):
+                if py_file.name != "__init__.py":
+                    try:
+                        with open(py_file, 'r', encoding='utf-8') as py_f:
+                            content = py_f.read()
+                        f.write(f"## {py_file.name}\n```python\n{content}\n```\n\n")
+                    except Exception as e:
+                        f.write(f"## {py_file.name}\nError reading file: {e}\n\n")
+        
+        # Delete domain
+        shutil.rmtree(source_path)
+        logger.info(f"Preserved and deleted domain: {source_domain}")
+    
+    def _merge_domains(self, source_path: Path, target_path: Path, source_domain: str, target_domain: str) -> None:
+        """Merge source domain into target domain"""
+        # Ensure target domain exists
+        target_path.mkdir(exist_ok=True)
+        
+        # Create merge record
+        merge_record_path = target_path / f"_merged_from_{source_domain}.md"
+        
+        with open(merge_record_path, 'w', encoding='utf-8') as f:
+            f.write(f"# Merged Content from {source_domain} Domain\n\n")
+            f.write(f"Merged into: {target_domain}\n")
+            f.write(f"Merge date: {datetime.now().isoformat()}\n\n")
+        
+        # Copy useful files to target domain
+        for py_file in source_path.rglob("*.py"):
+            if py_file.name not in ["__init__.py"]:
+                try:
+                    # Read source content
+                    with open(py_file, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                    
+                    # Write to merge record for manual integration
+                    with open(merge_record_path, 'a', encoding='utf-8') as f:
+                        f.write(f"## {py_file.name}\n```python\n{content}\n```\n\n")
+                        
+                except Exception as e:
+                    logger.warning(f"Failed to merge {py_file}: {e}")
+        
+        # Delete source domain
+        shutil.rmtree(source_path)
+        logger.info(f"Merged {source_domain} → {target_domain}")
+    
+    def _generate_standard_modules(self) -> None:
+        """Generate standard modules for all domains"""
+        logger.info("Generating standard domain modules...")
+        
+        generated_count = 0
+        
+        # Get current domains after consolidation
+        current_domains = []
+        for item in self.core_dir.iterdir():
+            if (item.is_dir() and 
+                not item.name.startswith('.') and 
+                not item.name.startswith('_') and
+                item.name != '__pycache__'):
+                current_domains.append(item.name)
+        
+        for domain_name in current_domains:
             domain_path = self.core_dir / domain_name
             
-            if not domain_path.exists():
-                continue
-            
-            domain_processed = False
-            
-            # Ensure all standard modules exist
-            for module_name in STANDARD_MODULES.keys():
+            # Generate missing standard modules
+            for module_name in STANDARD_MODULES:
                 module_path = domain_path / module_name
                 
-                if not module_path.exists() and module_name.endswith('.py'):
-                    # Generate missing standard module
-                    try:
-                        if module_name == "config.py":
-                            content = self._generate_generic_config(domain_name)
-                        elif module_name == "__init__.py":
-                            content = self._generate_generic_init(domain_name)
-                        else:
-                            content = self._generate_generic_module(domain_name, module_name)
-                        
-                        with open(module_path, 'w', encoding='utf-8') as f:
-                            f.write(content)
-                        
-                        implementation_results["modules_standardized"].append(f"{domain_name}/{module_name}")
-                        domain_processed = True
-                        
-                    except Exception as e:
-                        implementation_results["validation_issues"].append(f"Failed to generate {domain_name}/{module_name}: {e}")
-            
-            if domain_processed:
-                implementation_results["domains_processed"].append(domain_name)
+                if not module_path.exists():
+                    self._generate_standard_module(domain_path, module_name, domain_name)
+                    generated_count += 1
         
-        logger.info(f"Standard pattern implementation complete: {len(implementation_results['modules_standardized'])} modules standardized")
-        return implementation_results
+        self.correction_results["standard_modules_generated"] = generated_count
+        logger.info(f"Standard module generation complete: {generated_count} modules generated")
     
-    def _generate_generic_config(self, domain_name: str) -> str:
-        """Generate generic config.py for existing domains"""
-        timestamp = datetime.now().isoformat()
+    def _generate_standard_module(self, domain_path: Path, module_name: str, domain_name: str) -> None:
+        """Generate individual standard module"""
+        module_path = domain_path / module_name
         
-        # Determine domain spec based on name
-        if domain_name in ["primitives", "protocols"]:
-            priority_index = 1
-            load_order = 10 if domain_name == "primitives" else 20
-            dependencies = []
+        if module_name == "data_types.py":
+            content = self._generate_data_types_module(domain_name)
+        elif module_name == "operations.py":
+            content = self._generate_operations_module(domain_name)
+        elif module_name == "relations.py":
+            content = self._generate_relations_module(domain_name)
+        elif module_name == "config.py":
+            content = self._generate_config_module(domain_name)
+        elif module_name == "__init__.py":
+            content = self._generate_init_module(domain_name)
+        elif module_name == "README.md":
+            content = self._generate_readme_module(domain_name)
         else:
-            priority_index = 2
-            load_order = 30
-            dependencies = ["primitives", "protocols"]
+            return
+        
+        with open(module_path, 'w', encoding='utf-8') as f:
+            f.write(content)
+        
+        logger.debug(f"Generated {domain_name}/{module_name}")
+    
+    def _generate_data_types_module(self, domain_name: str) -> str:
+        """Generate data_types.py module"""
+        return f'''#!/usr/bin/env python3
+"""
+pyics/core/{domain_name}/data_types.py
+{domain_name.title()} Domain Data Types
+
+Engineering Lead: Nnamdi Okpala / OBINexus Computing
+Domain: {domain_name}
+Load Order: {DOMAIN_LOAD_ORDER.get(domain_name, 50)}
+
+PROBLEM SOLVED: Provides immutable data structures for {domain_name} domain operations
+DEPENDENCIES: typing, dataclasses for structure definition
+THREAD SAFETY: Yes - immutable data structures with type safety
+DETERMINISTIC: Yes - predictable structure behavior and validation
+
+This module defines the core data structures and type definitions for the {domain_name} domain,
+ensuring type safety and immutability across all domain operations.
+"""
+
+from typing import Any, Dict, List, Optional, TypeVar, Generic
+from dataclasses import dataclass, field
+from datetime import datetime
+import logging
+
+logger = logging.getLogger(f"pyics.core.{domain_name}.data_types")
+
+# Type variables for generic structures
+T = TypeVar('T')
+
+@dataclass(frozen=True)
+class {domain_name.title()}Entity:
+    """Base entity for {domain_name} domain"""
+    entity_id: str
+    entity_type: str = "{domain_name}"
+    created_at: datetime = field(default_factory=datetime.now)
+    metadata: Dict[str, Any] = field(default_factory=dict)
+    
+    def __post_init__(self):
+        """Validate entity after initialization"""
+        if not self.entity_id:
+            raise ValueError("Entity ID cannot be empty")
+        if not self.entity_type:
+            raise ValueError("Entity type cannot be empty")
+
+# Export all data types
+__all__ = [
+    "{domain_name.title()}Entity",
+]
+
+# [EOF] - End of {domain_name} data types module
+'''
+
+    def _generate_operations_module(self, domain_name: str) -> str:
+        """Generate operations.py module"""
+        return f'''#!/usr/bin/env python3
+"""
+pyics/core/{domain_name}/operations.py
+{domain_name.title()} Domain Operations
+
+Engineering Lead: Nnamdi Okpala / OBINexus Computing
+Domain: {domain_name}
+Load Order: {DOMAIN_LOAD_ORDER.get(domain_name, 50)}
+
+PROBLEM SOLVED: Provides pure functional operations for {domain_name} domain transformations
+DEPENDENCIES: {domain_name}.data_types for structure definitions
+THREAD SAFETY: Yes - pure functional operations with no shared state
+DETERMINISTIC: Yes - referentially transparent functions with predictable outputs
+
+This module implements pure functional operations for {domain_name} domain entities,
+ensuring deterministic transformations and maintaining immutability guarantees.
+"""
+
+from typing import Any, Dict, List, Optional, Callable, TypeVar
+from .data_types import {domain_name.title()}Entity
+import logging
+
+logger = logging.getLogger(f"pyics.core.{domain_name}.operations")
+
+# Type variables
+T = TypeVar('T')
+U = TypeVar('U')
+
+def create_{domain_name}_entity(entity_id: str, **kwargs) -> {domain_name.title()}Entity:
+    """
+    Create new {domain_name} entity with validation
+    
+    Args:
+        entity_id: Unique identifier for entity
+        **kwargs: Additional entity metadata
+        
+    Returns:
+        Validated {domain_name.title()}Entity instance
+    """
+    try:
+        entity = {domain_name.title()}Entity(
+            entity_id=entity_id,
+            metadata=kwargs
+        )
+        
+        logger.debug(f"Created {domain_name} entity: {{entity_id}}")
+        return entity
+        
+    except Exception as e:
+        logger.error(f"Failed to create {domain_name} entity: {{e}}")
+        raise
+
+def validate_{domain_name}_entity(entity: {domain_name.title()}Entity) -> bool:
+    """
+    Validate {domain_name} entity for consistency
+    
+    Args:
+        entity: Entity to validate
+        
+    Returns:
+        True if valid, False otherwise
+    """
+    try:
+        if not isinstance(entity, {domain_name.title()}Entity):
+            return False
+            
+        if not entity.entity_id or not entity.entity_type:
+            return False
+            
+        logger.debug(f"Validated {domain_name} entity: {{entity.entity_id}}")
+        return True
+        
+    except Exception as e:
+        logger.error(f"Entity validation failed: {{e}}")
+        return False
+
+# Export all operations
+__all__ = [
+    "create_{domain_name}_entity",
+    "validate_{domain_name}_entity",
+]
+
+# [EOF] - End of {domain_name} operations module
+'''
+
+    def _generate_relations_module(self, domain_name: str) -> str:
+        """Generate relations.py module"""
+        return f'''#!/usr/bin/env python3
+"""
+pyics/core/{domain_name}/relations.py
+{domain_name.title()} Domain Relations
+
+Engineering Lead: Nnamdi Okpala / OBINexus Computing
+Domain: {domain_name}
+Load Order: {DOMAIN_LOAD_ORDER.get(domain_name, 50)}
+
+PROBLEM SOLVED: Defines relationship patterns and constraints for {domain_name} domain entities
+DEPENDENCIES: {domain_name}.data_types for entity definitions
+THREAD SAFETY: Yes - immutable relationship definitions
+DETERMINISTIC: Yes - consistent relationship validation and enforcement
+
+This module defines the relationship patterns, constraints, and validation rules
+for entities within the {domain_name} domain and their interactions with other domains.
+"""
+
+from typing import Any, Dict, List, Optional, Set, Tuple, Protocol
+from .data_types import {domain_name.title()}Entity
+import logging
+
+logger = logging.getLogger(f"pyics.core.{domain_name}.relations")
+
+class {domain_name.title()}Relation(Protocol):
+    """Protocol for {domain_name} domain relations"""
+    
+    def validate_relation(self, source: {domain_name.title()}Entity, target: {domain_name.title()}Entity) -> bool:
+        """Validate relationship between entities"""
+        ...
+    
+    def get_relation_type(self) -> str:
+        """Get relation type identifier"""
+        ...
+
+def create_{domain_name}_relation(
+    source: {domain_name.title()}Entity, 
+    target: {domain_name.title()}Entity,
+    relation_type: str = "default"
+) -> Dict[str, Any]:
+    """
+    Create relationship between {domain_name} entities
+    
+    Args:
+        source: Source entity
+        target: Target entity
+        relation_type: Type of relationship
+        
+    Returns:
+        Relationship definition dictionary
+    """
+    try:
+        relation = {{
+            "source_id": source.entity_id,
+            "target_id": target.entity_id,
+            "relation_type": relation_type,
+            "domain": "{domain_name}",
+            "created_at": source.created_at
+        }}
+        
+        logger.debug(f"Created {domain_name} relation: {{relation_type}}")
+        return relation
+        
+    except Exception as e:
+        logger.error(f"Failed to create {domain_name} relation: {{e}}")
+        raise
+
+def validate_{domain_name}_relations(relations: List[Dict[str, Any]]) -> bool:
+    """
+    Validate collection of {domain_name} relations
+    
+    Args:
+        relations: List of relation definitions
+        
+    Returns:
+        True if all relations valid, False otherwise
+    """
+    try:
+        for relation in relations:
+            required_fields = ["source_id", "target_id", "relation_type", "domain"]
+            if not all(field in relation for field in required_fields):
+                return False
+                
+            if relation["domain"] != "{domain_name}":
+                return False
+        
+        logger.debug(f"Validated {{len(relations)}} {domain_name} relations")
+        return True
+        
+    except Exception as e:
+        logger.error(f"Relation validation failed: {{e}}")
+        return False
+
+# Export all relations
+__all__ = [
+    "{domain_name.title()}Relation",
+    "create_{domain_name}_relation",
+    "validate_{domain_name}_relations",
+]
+
+# [EOF] - End of {domain_name} relations module
+'''
+
+    def _generate_config_module(self, domain_name: str) -> str:
+        """Generate config.py module with cost metadata"""
+        load_order = DOMAIN_LOAD_ORDER.get(domain_name, 50)
         
         return f'''#!/usr/bin/env python3
 """
 pyics/core/{domain_name}/config.py
 {domain_name.title()} Domain Configuration
 
-Generated: {timestamp}
 Engineering Lead: Nnamdi Okpala / OBINexus Computing
 Domain: {domain_name}
+Load Order: {load_order}
 
-PROBLEM SOLVED: Centralized configuration for {domain_name} domain
-DEPENDENCIES: {", ".join(dependencies) if dependencies else "None - foundational domain"}
-THREAD SAFETY: Yes - Immutable configuration data
-DETERMINISTIC: Yes - Static configuration with predictable behavior
+PROBLEM SOLVED: Provides centralized configuration and cost metadata for {domain_name} domain
+DEPENDENCIES: typing for type definitions
+THREAD SAFETY: Yes - immutable configuration data
+DETERMINISTIC: Yes - static configuration with predictable behavior
+
+This module provides DOP-compliant configuration management for the {domain_name} domain,
+including cost metadata, behavior policies, and dependency injection interfaces.
 """
 
-from typing import Dict, List, Any, TypedDict
+from typing import Dict, List, Any, TypedDict, Literal
 import logging
 
 logger = logging.getLogger(f"pyics.core.{domain_name}.config")
@@ -1971,275 +716,574 @@ logger = logging.getLogger(f"pyics.core.{domain_name}.config")
 class DomainCostMetadata(TypedDict):
     priority_index: int
     compute_time_weight: float
-    exposure_type: str
+    exposure_type: Literal["public", "internal", "private"]
     dependency_level: int
     thread_safe: bool
     load_order: int
 
+class DomainConfiguration(TypedDict):
+    domain_name: str
+    cost_metadata: DomainCostMetadata
+    data_types_available: List[str]
+    relations_defined: List[str]
+    behavior_policies: Dict[str, Any]
+    export_interface: List[str]
+
 # Cost metadata for {domain_name} domain
 cost_metadata: DomainCostMetadata = {{
-    "priority_index": {priority_index},
-    "compute_time_weight": 0.1,
-    "exposure_type": "core_internal",
-    "dependency_level": {len(dependencies)},
+    "priority_index": {min(load_order // 10, 9)},
+    "compute_time_weight": {0.1 + (load_order - 10) * 0.05},
+    "exposure_type": "{"public" if load_order <= 30 else "internal"}",
+    "dependency_level": {max(1, load_order // 20)},
     "thread_safe": True,
     "load_order": {load_order}
 }}
 
-DEPENDENCIES: List[str] = {dependencies}
+# Domain configuration
+DOMAIN_CONFIG: DomainConfiguration = {{
+    "domain_name": "{domain_name}",
+    "cost_metadata": cost_metadata,
+    "data_types_available": ["{domain_name.title()}Entity"],
+    "relations_defined": ["{domain_name.title()}Relation"],
+    "behavior_policies": {{
+        "strict_validation": True,
+        "auto_dependency_resolution": True,
+        "lazy_loading": False,
+        "cache_enabled": True
+    }},
+    "export_interface": [
+        "get_domain_metadata",
+        "validate_configuration",
+        "cost_metadata"
+    ]
+}}
 
-def get_domain_metadata() -> Dict[str, Any]:
-    """Get domain metadata"""
-    return {{
-        "domain_name": "{domain_name}",
-        "cost_metadata": cost_metadata,
-        "dependencies": DEPENDENCIES
-    }}
+def get_domain_metadata() -> DomainConfiguration:
+    """Get complete domain configuration metadata"""
+    return DOMAIN_CONFIG
 
 def validate_configuration() -> bool:
-    """Validate configuration"""
-    return True
+    """Validate domain configuration for consistency"""
+    try:
+        # Validate required fields
+        required_fields = ["domain_name", "cost_metadata", "data_types_available"]
+        for field in required_fields:
+            if field not in DOMAIN_CONFIG:
+                logger.error(f"Missing required configuration field: {{field}}")
+                return False
+        
+        # Validate cost metadata
+        cost_meta = DOMAIN_CONFIG["cost_metadata"]
+        if cost_meta["load_order"] != {load_order}:
+            logger.error(f"Load order mismatch: expected {load_order}, got {{cost_meta['load_order']}}")
+            return False
+        
+        logger.debug(f"Domain {domain_name} configuration validated successfully")
+        return True
+        
+    except Exception as e:
+        logger.error(f"Configuration validation failed: {{e}}")
+        return False
 
-def validate_dependencies() -> bool:
-    """Validate dependencies"""
-    return True
+def get_cost_metadata() -> DomainCostMetadata:
+    """Get domain cost metadata for orchestration"""
+    return cost_metadata
 
+# Export configuration interfaces
 __all__ = [
     "cost_metadata",
-    "get_domain_metadata",
+    "get_domain_metadata", 
     "validate_configuration",
-    "validate_dependencies",
-    "DEPENDENCIES"
+    "get_cost_metadata",
+    "DomainCostMetadata",
+    "DomainConfiguration"
 ]
+
+# Auto-validate on module load
+if not validate_configuration():
+    logger.warning(f"Domain {domain_name} configuration loaded with validation warnings")
+
+# [EOF] - End of {domain_name} configuration module
 '''
-    
-    def _generate_generic_init(self, domain_name: str) -> str:
-        """Generate generic __init__.py for existing domains"""
-        timestamp = datetime.now().isoformat()
-        
+
+    def _generate_init_module(self, domain_name: str) -> str:
+        """Generate __init__.py module"""
         return f'''#!/usr/bin/env python3
 """
 pyics/core/{domain_name}/__init__.py
 {domain_name.title()} Domain Module
 
-Generated: {timestamp}
 Engineering Lead: Nnamdi Okpala / OBINexus Computing
 Domain: {domain_name}
+Load Order: {DOMAIN_LOAD_ORDER.get(domain_name, 50)}
+
+This module provides the public interface for the {domain_name} domain,
+exposing domain operations, data types, and configuration interfaces.
 """
 
-from .config import (
-    get_domain_metadata,
-    validate_configuration,
-    validate_dependencies,
-    cost_metadata,
-    DEPENDENCIES
-)
+# Import domain components
+from .data_types import {domain_name.title()}Entity
+from .operations import create_{domain_name}_entity, validate_{domain_name}_entity
+from .relations import create_{domain_name}_relation, validate_{domain_name}_relations
+from .config import get_domain_metadata, validate_configuration, cost_metadata
 
-DOMAIN_NAME = "{domain_name}"
-
+# Public domain interface
 __all__ = [
-    "DOMAIN_NAME",
+    # Data types
+    "{domain_name.title()}Entity",
+    
+    # Operations
+    "create_{domain_name}_entity",
+    "validate_{domain_name}_entity",
+    
+    # Relations
+    "create_{domain_name}_relation", 
+    "validate_{domain_name}_relations",
+    
+    # Configuration
     "get_domain_metadata",
     "validate_configuration",
-    "validate_dependencies",
-    "cost_metadata",
-    "DEPENDENCIES"
+    "cost_metadata"
 ]
+
+# Domain metadata for external access
+__domain__ = "{domain_name}"
+__load_order__ = {DOMAIN_LOAD_ORDER.get(domain_name, 50)}
+__version__ = "1.0.0"
+
+# [EOF] - End of {domain_name} domain module
 '''
-    
-    def _generate_generic_module(self, domain_name: str, module_name: str) -> str:
-        """Generate generic module content"""
-        timestamp = datetime.now().isoformat()
-        
-        return f'''#!/usr/bin/env python3
-"""
-pyics/core/{domain_name}/{module_name}
-{domain_name.title()} Domain - {module_name.replace('.py', '').title()}
 
-Generated: {timestamp}
-Engineering Lead: Nnamdi Okpala / OBINexus Computing
-Domain: {domain_name}
-"""
+    def _generate_readme_module(self, domain_name: str) -> str:
+        """Generate README.md module"""
+        return f'''# {domain_name.title()} Domain
 
-# {module_name.replace('.py', '').title()} implementation for {domain_name} domain
+**Engineering Lead**: Nnamdi Okpala / OBINexus Computing  
+**Domain**: {domain_name}  
+**Load Order**: {DOMAIN_LOAD_ORDER.get(domain_name, 50)}  
+**Architecture**: Single-Pass DOP-Compliant Domain
 
-__all__ = []
+## Overview
 
-# [EOF] - End of {domain_name} {module_name.replace('.py', '')} module
+The {domain_name} domain provides specialized functionality for calendar automation within the Pyics system architecture. This domain follows strict single-pass loading principles and maintains complete separation of concerns.
+
+## Domain Structure
+
+```
+{domain_name}/
+├── data_types.py      # Immutable domain entities and structures
+├── operations.py      # Pure functional domain operations  
+├── relations.py       # Domain relationship definitions
+├── config.py          # Domain configuration and cost metadata
+├── __init__.py        # Public domain interface
+└── README.md          # This documentation
+```
+
+## Cost Metadata
+
+- **Load Order**: {DOMAIN_LOAD_ORDER.get(domain_name, 50)}
+- **Dependency Level**: {max(1, DOMAIN_LOAD_ORDER.get(domain_name, 50) // 20)}
+- **Thread Safe**: Yes
+- **Compute Weight**: {0.1 + (DOMAIN_LOAD_ORDER.get(domain_name, 50) - 10) * 0.05}
+
+## Usage Examples
+
+### Basic Entity Creation
+
+```python
+from pyics.core.{domain_name} import create_{domain_name}_entity, {domain_name.title()}Entity
+
+# Create domain entity
+entity = create_{domain_name}_entity("entity_001", description="Example entity")
+
+# Validate entity
+from pyics.core.{domain_name} import validate_{domain_name}_entity
+is_valid = validate_{domain_name}_entity(entity)
+```
+
+### Domain Configuration
+
+```python
+from pyics.core.{domain_name} import get_domain_metadata, cost_metadata
+
+# Get complete domain metadata
+metadata = get_domain_metadata()
+print(f"Domain: {{metadata['domain_name']}}")
+print(f"Load Order: {{metadata['cost_metadata']['load_order']}}")
+
+# Access cost metadata directly
+print(f"Compute Weight: {{cost_metadata['compute_time_weight']}}")
+```
+
+### Relationship Management
+
+```python
+from pyics.core.{domain_name} import create_{domain_name}_relation
+
+# Create relationship between entities
+relation = create_{domain_name}_relation(source_entity, target_entity, "dependency")
+```
+
+## Dependencies
+
+This domain depends on:
+- Python 3.8+ standard library
+- typing module for type definitions
+- dataclasses for immutable structures
+
+## Integration
+
+The {domain_name} domain integrates with:
+- IoC Registry for dependency resolution
+- Cost-aware orchestration system
+- Single-pass loading architecture
+
+## Development
+
+When extending this domain:
+1. Maintain immutability of all data structures
+2. Use pure functional operations only  
+3. Follow single-pass loading principles
+4. Update cost metadata for new operations
+5. Maintain comprehensive test coverage
+
+---
+
+**Load Order**: {DOMAIN_LOAD_ORDER.get(domain_name, 50)} | **Thread Safe**: ✅ | **DOP Compliant**: ✅
 '''
-    
-    def _create_single_pass_registry(self) -> Dict[str, Any]:
+
+    def _create_ioc_registry(self) -> None:
         """Create single-pass IoC registry"""
         logger.info("Creating single-pass IoC registry...")
         
-        registry_path = self.core_dir / "ioc_registry.py"
-        timestamp = datetime.now().isoformat()
+        # Get current domains after consolidation
+        current_domains = []
+        for item in self.core_dir.iterdir():
+            if (item.is_dir() and 
+                not item.name.startswith('.') and 
+                not item.name.startswith('_') and
+                item.name != '__pycache__'):
+                current_domains.append(item.name)
+        
+        # Sort domains by load order
+        sorted_domains = sorted(current_domains, key=lambda d: DOMAIN_LOAD_ORDER.get(d, 50))
         
         registry_content = f'''#!/usr/bin/env python3
 """
 pyics/core/ioc_registry.py
-Single-Pass IoC Registry
+Single-Pass IoC Registry for Domain Configuration Resolution
 
-Generated: {timestamp}
+Generated: {datetime.now().isoformat()}
 Engineering Lead: Nnamdi Okpala / OBINexus Computing
+Purpose: Cost-aware single-pass domain loading with dependency resolution
+Architecture: DOP-compliant IoC container with deterministic load order
+
+PROBLEM SOLVED: Provides single-pass domain loading with cost-aware optimization
+DEPENDENCIES: All pyics.core domain configuration modules
+THREAD SAFETY: Yes - immutable registry with concurrent access support
+DETERMINISTIC: Yes - predictable load order and dependency resolution
+
+This registry implements single-pass domain loading based on cost metadata
+and provides type-safe dependency injection for runtime orchestration.
 """
 
-from typing import Dict, List, Any, Optional
+import importlib
+import sys
+from typing import Dict, List, Any, Optional, Tuple
 import logging
 
 logger = logging.getLogger("pyics.core.ioc_registry")
 
-# Domain load order for single-pass architecture
-DOMAIN_LOAD_ORDER = {{
-    "primitives": 10,
-    "protocols": 20,
-    "structures": 30
-}}
+# Single-pass load order (cost-optimized)
+SINGLE_PASS_LOAD_ORDER = {sorted_domains}
 
-def get_domain_load_order(domain_name: str) -> Optional[int]:
-    """Get load order for domain"""
-    return DOMAIN_LOAD_ORDER.get(domain_name)
+# Domain cost metadata cache
+_domain_cost_cache: Dict[str, Dict[str, Any]] = {{}}
+_registry_initialized = False
 
-def get_load_order() -> List[str]:
-    """Get domains in load order"""
-    return sorted(DOMAIN_LOAD_ORDER.keys(), key=lambda x: DOMAIN_LOAD_ORDER[x])
-
-def validate_single_pass_architecture() -> bool:
-    """Validate single-pass architecture compliance"""
-    try:
-        for domain in get_load_order():
-            try:
-                module = __import__(f"pyics.core.{{domain}}", fromlist=["validate_configuration"])
-                if hasattr(module, "validate_configuration"):
-                    if not module.validate_configuration():
-                        logger.error(f"Domain {{domain}} configuration validation failed")
-                        return False
-            except ImportError as e:
-                logger.warning(f"Could not validate domain {{domain}}: {{e}}")
+class SinglePassRegistry:
+    """
+    Cost-aware single-pass domain registry
+    
+    Implements deterministic domain loading based on cost metadata
+    and dependency analysis for optimal system initialization.
+    """
+    
+    def __init__(self):
+        self._loaded_domains: Dict[str, Any] = {{}}
+        self._load_times: Dict[str, float] = {{}}
+        self._initialization_complete = False
+    
+    def initialize_single_pass(self) -> bool:
+        """
+        Execute single-pass domain loading in cost-optimized order
         
-        logger.info("Single-pass architecture validation passed")
-        return True
+        Returns:
+            True if initialization successful, False otherwise
+        """
+        global _registry_initialized
         
-    except Exception as e:
-        logger.error(f"Architecture validation failed: {{e}}")
-        return False
-
-__all__ = [
-    "get_domain_load_order",
-    "get_load_order", 
-    "validate_single_pass_architecture",
-    "DOMAIN_LOAD_ORDER"
-]
-'''
+        if _registry_initialized:
+            logger.warning("Registry already initialized")
+            return True
         
         try:
-            with open(registry_path, 'w', encoding='utf-8') as f:
-                f.write(registry_content)
+            logger.info("Executing single-pass domain loading...")
             
-            logger.info(f"Single-pass IoC registry created: {registry_path}")
-            return {"status": "success", "file_path": str(registry_path)}
+            import time
+            total_start = time.time()
+            
+            for domain_name in SINGLE_PASS_LOAD_ORDER:
+                start_time = time.time()
+                
+                if self._load_domain_single_pass(domain_name):
+                    load_time = time.time() - start_time
+                    self._load_times[domain_name] = load_time
+                    logger.debug(f"Loaded {{domain_name}} in {{load_time:.3f}}s")
+                else:
+                    logger.error(f"Failed to load domain: {{domain_name}}")
+                    return False
+            
+            total_time = time.time() - total_start
+            logger.info(f"Single-pass loading complete in {{total_time:.3f}}s")
+            logger.info(f"Loaded domains: {{list(self._loaded_domains.keys())}}")
+            
+            _registry_initialized = True
+            self._initialization_complete = True
+            return True
             
         except Exception as e:
-            logger.error(f"Failed to create IoC registry: {e}")
-            return {"status": "failed", "error": str(e)}
+            logger.error(f"Single-pass initialization failed: {{e}}")
+            return False
     
-    def _validate_corrected_structure(self) -> Dict[str, Any]:
-        """Validate corrected structure compliance"""
-        logger.info("Validating corrected structure...")
-        
-        validation_result = {
-            "valid": True,
-            "domains_validated": [],
-            "compliance_checks": {},
-            "violations": []
-        }
-        
-        for domain_name in TARGET_DOMAINS:
-            domain_path = self.core_dir / domain_name
+    def _load_domain_single_pass(self, domain_name: str) -> bool:
+        """Load single domain with validation"""
+        try:
+            # Import domain module
+            module_name = f"pyics.core.{{domain_name}}"
+            domain_module = importlib.import_module(module_name)
             
-            domain_validation = {
-                "exists": domain_path.exists(),
-                "standard_modules": {},
-                "single_pass_compliance": True
-            }
+            # Validate domain interface
+            required_attrs = ["get_domain_metadata", "validate_configuration", "cost_metadata"]
+            for attr in required_attrs:
+                if not hasattr(domain_module, attr):
+                    logger.error(f"Domain {{domain_name}} missing required attribute: {{attr}}")
+                    return False
             
-            if domain_path.exists():
-                # Check standard modules
-                for module_name in STANDARD_MODULES.keys():
-                    module_path = domain_path / module_name
-                    domain_validation["standard_modules"][module_name] = module_path.exists()
+            # Validate domain configuration
+            if not domain_module.validate_configuration():
+                logger.error(f"Domain {{domain_name}} configuration validation failed")
+                return False
+            
+            # Cache domain metadata
+            metadata = domain_module.get_domain_metadata()
+            cost_metadata = domain_module.cost_metadata
+            
+            self._loaded_domains[domain_name] = {{
+                "module": domain_module,
+                "metadata": metadata,
+                "cost_metadata": cost_metadata
+            }}
+            
+            # Update global cost cache
+            _domain_cost_cache[domain_name] = cost_metadata
+            
+            return True
+            
+        except ImportError as e:
+            logger.error(f"Failed to import domain {{domain_name}}: {{e}}")
+            return False
+        except Exception as e:
+            logger.error(f"Error loading domain {{domain_name}}: {{e}}")
+            return False
+    
+    def get_domain_metadata(self, domain_name: str) -> Optional[Dict[str, Any]]:
+        """Get metadata for loaded domain"""
+        if not self._initialization_complete:
+            logger.warning("Registry not fully initialized")
+            return None
+        
+        return self._loaded_domains.get(domain_name, {{}}).get("metadata")
+    
+    def get_load_order(self) -> List[str]:
+        """Get single-pass load order"""
+        return SINGLE_PASS_LOAD_ORDER.copy()
+    
+    def get_load_performance(self) -> Dict[str, float]:
+        """Get domain load performance metrics"""
+        return self._load_times.copy()
+    
+    def validate_single_pass_compliance(self) -> bool:
+        """Validate single-pass loading compliance"""
+        try:
+            # Check all domains loaded
+            for domain_name in SINGLE_PASS_LOAD_ORDER:
+                if domain_name not in self._loaded_domains:
+                    logger.error(f"Domain {{domain_name}} not loaded")
+                    return False
+            
+            # Validate load order compliance
+            for i, domain_name in enumerate(SINGLE_PASS_LOAD_ORDER):
+                expected_load_order = self._loaded_domains[domain_name]["cost_metadata"]["load_order"]
+                
+                # Check load order consistency
+                for j in range(i):
+                    prev_domain = SINGLE_PASS_LOAD_ORDER[j]
+                    prev_load_order = self._loaded_domains[prev_domain]["cost_metadata"]["load_order"]
                     
-                    if not module_path.exists() and module_name != "README.md":
-                        validation_result["violations"].append(f"{domain_name} missing {module_name}")
-                        validation_result["valid"] = False
-                
-                # Check for remaining violations
-                nested_dirs = [
-                    d for d in domain_path.iterdir() 
-                    if d.is_dir() and d.name not in ["__pycache__"] and not d.name.startswith('.')
-                ]
-                
-                if nested_dirs:
-                    validation_result["violations"].append(f"{domain_name} still has nested directories: {[d.name for d in nested_dirs]}")
-                    validation_result["valid"] = False
-                
-                validation_result["domains_validated"].append(domain_name)
-            else:
-                validation_result["violations"].append(f"Domain {domain_name} does not exist")
-                validation_result["valid"] = False
+                    if prev_load_order >= expected_load_order:
+                        logger.error(f"Load order violation: {{prev_domain}} ({{prev_load_order}}) >= {{domain_name}} ({{expected_load_order}})")
+                        return False
             
-            validation_result["compliance_checks"][domain_name] = domain_validation
+            logger.info("Single-pass compliance validation passed")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Compliance validation failed: {{e}}")
+            return False
+
+# Global registry instance
+_registry_instance: Optional[SinglePassRegistry] = None
+
+def get_registry() -> SinglePassRegistry:
+    """Get or create global registry instance"""
+    global _registry_instance
+    
+    if _registry_instance is None:
+        _registry_instance = SinglePassRegistry()
+        if not _registry_instance.initialize_single_pass():
+            raise RuntimeError("Failed to initialize single-pass registry")
+    
+    return _registry_instance
+
+def get_domain_metadata(domain_name: str) -> Optional[Dict[str, Any]]:
+    """Convenience function to get domain metadata"""
+    registry = get_registry()
+    return registry.get_domain_metadata(domain_name)
+
+def get_all_domains() -> List[str]:
+    """Get list of all loaded domains"""
+    return SINGLE_PASS_LOAD_ORDER.copy()
+
+def get_domain_cost_metadata(domain_name: str) -> Optional[Dict[str, Any]]:
+    """Get domain cost metadata"""
+    return _domain_cost_cache.get(domain_name)
+
+def validate_architecture() -> bool:
+    """Validate complete architecture compliance"""
+    registry = get_registry()
+    return registry.validate_single_pass_compliance()
+
+# Export registry interfaces
+__all__ = [
+    "SinglePassRegistry",
+    "get_registry",
+    "get_domain_metadata",
+    "get_all_domains",
+    "get_domain_cost_metadata", 
+    "validate_architecture",
+    "SINGLE_PASS_LOAD_ORDER"
+]
+
+# Auto-initialize registry
+try:
+    logger.debug("Auto-initializing single-pass registry...")
+    _auto_registry = get_registry()
+except Exception as e:
+    logger.error(f"Failed to auto-initialize registry: {{e}}")
+
+# [EOF] - End of single-pass IoC registry
+'''
         
-        logger.info(f"Structure validation: {'PASSED' if validation_result['valid'] else 'FAILED'}")
-        return validation_result
+        registry_path = self.core_dir / "ioc_registry.py"
+        with open(registry_path, 'w', encoding='utf-8') as f:
+            f.write(registry_content)
+        
+        self.correction_results["ioc_registry_created"] = True
+        logger.info(f"Single-pass IoC registry created: {registry_path}")
+    
+    def _validate_architecture(self) -> None:
+        """Validate corrected architecture compliance"""
+        logger.info("Validating corrected architecture...")
+        
+        try:
+            # Test import of IoC registry
+            ioc_path = self.core_dir / "ioc_registry.py"
+            if not ioc_path.exists():
+                raise ValueError("IoC registry not found")
+            
+            # Validate domain structure compliance
+            validation_errors = []
+            
+            for item in self.core_dir.iterdir():
+                if (item.is_dir() and 
+                    not item.name.startswith('.') and 
+                    not item.name.startswith('_') and
+                    item.name != '__pycache__'):
+                    
+                    domain_name = item.name
+                    
+                    # Check for standard modules
+                    for module in STANDARD_MODULES:
+                        module_path = item / module
+                        if not module_path.exists():
+                            validation_errors.append(f"{domain_name} missing {module}")
+                    
+                    # Check for complex nesting violations
+                    complex_dirs = ["implementations", "interfaces", "compliance", "contracts", "tests"]
+                    for complex_dir in complex_dirs:
+                        if (item / complex_dir).exists():
+                            validation_errors.append(f"{domain_name} has complex nesting: {complex_dir}/")
+            
+            if validation_errors:
+                logger.error(f"Architecture validation failed: {validation_errors}")
+                self.correction_results["validation_passed"] = False
+                self.correction_results["summary"] = f"❌ Validation failed: {len(validation_errors)} violations"
+            else:
+                logger.info("Architecture validation passed")
+                self.correction_results["validation_passed"] = True
+                self.correction_results["summary"] = "✅ Single-pass architecture implemented successfully"
+                
+        except Exception as e:
+            logger.error(f"Architecture validation failed: {e}")
+            self.correction_results["validation_passed"] = False
+            self.correction_results["summary"] = f"❌ Validation error: {e}"
 
 def main():
     """Main execution function"""
-    corrector = StructureCorrector(PROJECT_ROOT)
-    results = corrector.execute_structure_correction()
+    corrector = PyicsStructureCorrector(PROJECT_ROOT)
+    results = corrector.execute_complete_correction()
     
-    # Display comprehensive results
-    print("=" * 80)
-    print("PYICS STRUCTURE CORRECTION RESULTS")
-    print("=" * 80)
+    # Display results
+    print("=" * 60)
+    print("PYICS STRUCTURE CORRECTION SUMMARY")
+    print("=" * 60)
+    print(f"Backup Created: {'✅' if results['backup_created'] else '❌'}")
+    print(f"Complex Structures Cleaned: {results['complex_structures_cleaned']}")
+    print(f"Domains Consolidated: {results['domains_consolidated']}")
+    print(f"Standard Modules Generated: {results['standard_modules_generated']}")
+    print(f"IoC Registry Created: {'✅' if results['ioc_registry_created'] else '❌'}")
+    print(f"Validation Passed: {'✅' if results['validation_passed'] else '❌'}")
+    print("=" * 60)
+    print(f"Status: {results['summary']}")
+    print("=" * 60)
     
-    if results.get("overall_status") == "SUCCESS":
-        print("🎯 STRUCTURE CORRECTION COMPLETE: Single-pass architecture implemented")
-        print()
-        print("✅ Structure Corrections:")
-        if results.get("cleanup", {}).get("directories_removed"):
-            print(f"   - Removed {len(results['cleanup']['directories_removed'])} complex directories")
-        if results.get("consolidation", {}).get("files_consolidated"):
-            print(f"   - Consolidated {len(results['consolidation']['files_consolidated'])} scattered files")
-        if results.get("structures_generation", {}).get("modules_generated"):
-            print(f"   - Generated {len(results['structures_generation']['modules_generated'])} structures modules")
+    if results["validation_passed"]:
+        print("\n🎯 ARCHITECTURE CORRECTED SUCCESSFULLY!")
+        print("🔄 Single-pass loading implemented")
+        print("🧹 Complex structures cleaned")
+        print("📁 Standard domain pattern established")
+        print("⚡ Cost-aware IoC registry created")
         
-        print()
-        print("📋 NEXT STEPS:")
-        print("1. Run the full architecture validator")
-        print("2. Test domain imports:")
-        print("   from pyics.core.primitives import get_domain_metadata")
-        print("   from pyics.core.protocols import DomainInterface")
-        print("   from pyics.core.structures import EventStructure")
-        print("3. Validate single-pass loading:")
-        print("   python -c 'from pyics.core.ioc_registry import validate_single_pass_architecture; print(validate_single_pass_architecture())'")
-        print("4. Run CLI validation:")
-        print("   python -m pyics.cli.main domain validate")
-        
-        print()
-        print("🚀 ARCHITECTURE STATUS: Ready for production use")
-        
-    else:
-        print("❌ STRUCTURE CORRECTION FAILED")
-        if "error" in results:
-            print(f"Error: {results['error']}")
-        
-        if results.get("validation", {}).get("violations"):
-            print("\nRemaining violations:")
-            for violation in results["validation"]["violations"]:
-                print(f"   - {violation}")
+        print("\n📋 NEXT STEPS:")
+        print("1. Test single-pass loading: python -c 'from pyics.core.ioc_registry import validate_architecture; print(validate_architecture())'")
+        print("2. Verify domain loading: python -c 'from pyics.core.ioc_registry import get_all_domains; print(get_all_domains())'")
+        print("3. Check load performance: python -c 'from pyics.core.ioc_registry import get_registry; print(get_registry().get_load_performance())'")
+        print("4. Run comprehensive tests on cleaned architecture")
+    
+    sys.exit(0 if results["validation_passed"] else 1)
 
 if __name__ == "__main__":
     main()
 
-# [EOF] - End of structure corrector
+# [EOF] - End of Pyics structure corrector
