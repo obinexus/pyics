@@ -3,7 +3,7 @@
 setup.py
 Pyics Package Configuration - Single-Pass Architecture
 
-Generated: 2025-05-31T20:32:31.107552
+Generated: 2025-05-31T20:31:15.797912
 Engineering Lead: Nnamdi Okpala / OBINexus Computing
 Purpose: Python package configuration with first-pass module exposure
 
