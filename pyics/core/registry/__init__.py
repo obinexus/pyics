@@ -1,17 +1,22 @@
 #!/usr/bin/env python3
 """
 pyics/core/registry/__init__.py
-Linear Domain: Global transformation registry with version isolation
+Linear Domain: Global transformation registry
 
-SINGLE-PASS DEPENDENCY CONSTRAINTS:
+DOMAIN CLASSIFICATION:
+- Responsibility: Global transformation registry
+- Dependency Level: 5
+- Safety Guarantee: Thread-safe component coordination
+- Architecture: Linear Single-Pass System
+
+SINGLE-PASS CONSTRAINTS:
 - This module follows strict linear dependency resolution
-- NO imports from sibling domains allowed
+- NO imports from sibling domains allowed  
 - ALL dependencies must be from lower-level primitives only
 - Thread-safe execution guaranteed through immutable operations
 
-Domain Responsibility: Global transformation registry with version isolation
-Dependency Level: 5
-Safety Classification: Thread-Safe, Audit-Compliant
+Author: OBINexus Engineering Team / Nnamdi Okpala
+Phase: 3.1.2 - Domain Implementation Routing
 """
 
 from typing import Any, Dict, List, Optional
@@ -20,27 +25,42 @@ import logging
 # Configure domain-specific logging
 logger = logging.getLogger(f"pyics.core.registry")
 
-# Domain validation marker
+# Domain metadata
 __domain__ = "registry"
+__description__ = "Global transformation registry"
 __dependency_level__ = 5
+__safety_guarantee__ = "Thread-safe component coordination"
 __thread_safe__ = True
 
-# Linear architecture compliance validation
+# Linear architecture compliance
 def validate_domain_isolation() -> bool:
     """Ensure domain maintains isolation from sibling modules"""
     # Implementation validates no cross-domain imports exist
     return True
 
+def get_domain_metadata() -> Dict[str, Any]:
+    """Return comprehensive domain metadata"""
+    return {
+        "domain": __domain__,
+        "description": __description__,
+        "dependency_level": __dependency_level__,
+        "safety_guarantee": __safety_guarantee__,
+        "thread_safe": __thread_safe__,
+        "architecture": "Linear Single-Pass System"
+    }
+
 def register_domain_components() -> Dict[str, Any]:
     """Register domain components with global registry"""
     components = {}
     
-    # Import domain implementations
+    # Import domain implementations if available
     try:
         from .implementations import *
-        components.update(get_domain_exports())
+        if 'get_domain_exports' in globals():
+            components.update(get_domain_exports())
+        logger.info(f"Domain components registered for: registry")
     except ImportError:
-        logger.warning(f"No implementations found for domain: registry")
+        logger.info(f"No implementations found for domain: registry")
     
     return components
 
@@ -51,7 +71,8 @@ if not validate_domain_isolation():
 # Export domain interface
 __all__ = [
     'validate_domain_isolation',
+    'get_domain_metadata', 
     'register_domain_components',
 ]
 
-logger.info(f"Linear Domain 'registry' initialized with single-pass compliance")
+logger.info(f"Linear Domain 'registry' initialized - Level 5")

@@ -1,17 +1,22 @@
 #!/usr/bin/env python3
 """
 pyics/core/validators/__init__.py
-Linear Domain: Input/output validation ensuring data integrity
+Linear Domain: Input/output validation
 
-SINGLE-PASS DEPENDENCY CONSTRAINTS:
+DOMAIN CLASSIFICATION:
+- Responsibility: Input/output validation
+- Dependency Level: 3
+- Safety Guarantee: Data integrity checking
+- Architecture: Linear Single-Pass System
+
+SINGLE-PASS CONSTRAINTS:
 - This module follows strict linear dependency resolution
-- NO imports from sibling domains allowed
+- NO imports from sibling domains allowed  
 - ALL dependencies must be from lower-level primitives only
 - Thread-safe execution guaranteed through immutable operations
 
-Domain Responsibility: Input/output validation ensuring data integrity
-Dependency Level: 3
-Safety Classification: Thread-Safe, Audit-Compliant
+Author: OBINexus Engineering Team / Nnamdi Okpala
+Phase: 3.1.2 - Domain Implementation Routing
 """
 
 from typing import Any, Dict, List, Optional
@@ -20,27 +25,42 @@ import logging
 # Configure domain-specific logging
 logger = logging.getLogger(f"pyics.core.validators")
 
-# Domain validation marker
+# Domain metadata
 __domain__ = "validators"
+__description__ = "Input/output validation"
 __dependency_level__ = 3
+__safety_guarantee__ = "Data integrity checking"
 __thread_safe__ = True
 
-# Linear architecture compliance validation
+# Linear architecture compliance
 def validate_domain_isolation() -> bool:
     """Ensure domain maintains isolation from sibling modules"""
     # Implementation validates no cross-domain imports exist
     return True
 
+def get_domain_metadata() -> Dict[str, Any]:
+    """Return comprehensive domain metadata"""
+    return {
+        "domain": __domain__,
+        "description": __description__,
+        "dependency_level": __dependency_level__,
+        "safety_guarantee": __safety_guarantee__,
+        "thread_safe": __thread_safe__,
+        "architecture": "Linear Single-Pass System"
+    }
+
 def register_domain_components() -> Dict[str, Any]:
     """Register domain components with global registry"""
     components = {}
     
-    # Import domain implementations
+    # Import domain implementations if available
     try:
         from .implementations import *
-        components.update(get_domain_exports())
+        if 'get_domain_exports' in globals():
+            components.update(get_domain_exports())
+        logger.info(f"Domain components registered for: validators")
     except ImportError:
-        logger.warning(f"No implementations found for domain: validators")
+        logger.info(f"No implementations found for domain: validators")
     
     return components
 
@@ -51,7 +71,8 @@ if not validate_domain_isolation():
 # Export domain interface
 __all__ = [
     'validate_domain_isolation',
+    'get_domain_metadata', 
     'register_domain_components',
 ]
 
-logger.info(f"Linear Domain 'validators' initialized with single-pass compliance")
+logger.info(f"Linear Domain 'validators' initialized - Level 3")
