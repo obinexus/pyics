@@ -1,0 +1,5 @@
+[console_scripts]
+pyics = pyics.cli.main:main
+pyics-audit = pyics.cli.registry.main:registry_cli
+pyics-generate = pyics.cli.composition.main:composition_cli
+pyics-validate = pyics.cli.validation.main:validation_cli

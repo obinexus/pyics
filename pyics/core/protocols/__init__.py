@@ -5,188 +5,75 @@ Protocols Domain Module
 
 Engineering Lead: Nnamdi Okpala / OBINexus Computing
 Domain: protocols
+Phase: 3.1.6.2 - Domain Modularization
+
+PROBLEM SOLVED: Defines all type-safe interfaces for cross-domain communication
+SEPARATION RATIONALE: Interface-only, no implementation logic allowed
+MERGE POTENTIAL: PRESERVE
+
+Public interface for protocols domain following single-responsibility principles
+and maintaining architectural isolation for deterministic behavior.
 """
 
 # Import domain configuration
-from .config import get_domain_metadata, validate_configuration, cost_metadata
+from .config import (
+    get_domain_metadata,
+    validate_configuration,
+    cost_metadata,
+    get_behavior_policy,
+    update_behavior_policy
+)
 
-#!/usr/bin/env python3
-"""
-pyics/core/protocols/__init__.py
-Protocols Domain - Modular ABC Contract Architecture
+# Import core domain components
+try:
+    from .data_types import *
+except ImportError:
+    pass  # data_types module may not exist yet
 
-PROBLEM SOLVED: ABC contract interfaces and protocol definitions
-ARCHITECTURE: Single-pass dependency isolation with ABC contract extensions
-MODULES: Problem-classified modular segmentation
+try:
+    from .operations import *
+except ImportError:
+    pass  # operations module may not exist yet
 
-Author: OBINexus Engineering Team / Nnamdi Okpala
-Architecture: Single-Pass RIFT System with Cost-Aware Loading
-Phase: 3.1.6.1 - Modular Problem Classification
-"""
+try:
+    from .relations import *
+except ImportError:
+    pass  # relations module may not exist yet
 
-from typing import Any, Dict, List, Optional
-import logging
-
-# Import all modular components
-from .rift_interfaces import get_module_exports as rift_interfaces_exports
-from .validation_protocols import get_module_exports as validation_protocols_exports
-from .transformation_protocols import get_module_exports as transformation_protocols_exports
-from .domain_contracts import get_module_exports as domain_contracts_exports
-
-# Domain metadata for cost-aware loading
-__domain_metadata__ = {
-    "name": "protocols",
+# Domain metadata for external access
+DOMAIN_NAME = "protocols"
+DOMAIN_SPECIFICATION = {
     "priority_index": 1,
     "compute_time_weight": 0.05,
     "exposure_type": "version_required",
-    "dependency_level": 1,
     "thread_safe": True,
-    "load_order": 2,
-    "modular_restructure": "2025-05-31",
-    "module_count": 4
+    "load_order": 20
 }
 
-logger = logging.getLogger(f"pyics.core.protocols")
-
-class ProtocolsDomainCoordinator:
-    """
-    Domain coordinator for modular ABC contract management
-    
-    Manages module registration, dependency resolution, and contract validation
-    """
-    
-    def __init__(self):
-        self._modules = {}
-        self._contracts = {}
-        self._initialized = False
-    
-    def register_modules(self) -> bool:
-        """Register all domain modules with contract validation"""
-        try:
-            module_exports = {
-                'rift_interfaces': rift_interfaces_exports(),
-        'validation_protocols': validation_protocols_exports(),
-        'transformation_protocols': transformation_protocols_exports(),
-        'domain_contracts': domain_contracts_exports()
-            }
-            
-            for module_name, exports in module_exports.items():
-                self._modules[module_name] = exports
-                logger.info(f"Registered module: {module_name}")
-            
-            self._initialized = True
-            return True
-            
-        except Exception as e:
-            logger.error(f"Module registration failed: {e}")
-            return False
-    
-    def get_module_contracts(self) -> Dict[str, Any]:
-        """Get all ABC contracts from registered modules"""
-        contracts = {}
-        
-        for module_name, exports in self._modules.items():
-            for export_name, export_obj in exports.items():
-                if export_name.endswith('Protocol') or export_name.endswith('Base'):
-                    contracts[f"{module_name}.{export_name}"] = export_obj
-        
-        return contracts
-    
-    def validate_domain_integrity(self) -> bool:
-        """Validate domain maintains ABC contract integrity"""
-        try:
-            if not self._initialized:
-                return False
-            
-            # Validate all modules are properly registered
-            expected_modules = {'rift_interfaces', 'transformation_protocols', 'domain_contracts', 'validation_protocols'}
-            registered_modules = set(self._modules.keys())
-            
-            if expected_modules != registered_modules:
-                logger.error(f"Module registration mismatch: expected {expected_modules}, got {registered_modules}")
-                return False
-            
-            # Validate contract structure
-            contracts = self.get_module_contracts()
-            if not contracts:
-                logger.error("No ABC contracts found in domain")
-                return False
-            
-            logger.info(f"Domain integrity validated: {len(self._modules)} modules, {len(contracts)} contracts")
-            return True
-            
-        except Exception as e:
-            logger.error(f"Domain integrity validation failed: {e}")
-            return False
-
-# Global domain coordinator instance
-_domain_coordinator = ProtocolsDomainCoordinator()
-
-def get_domain_exports() -> Dict[str, Any]:
-    """Export all domain capabilities for registration"""
-    if not _domain_coordinator._initialized:
-        _domain_coordinator.register_modules()
-    
-    exports = {}
-    
-    # Export all module capabilities
-    for module_name, module_exports in _domain_coordinator._modules.items():
-        for export_name, export_obj in module_exports.items():
-            exports[f"{module_name}_{export_name}"] = export_obj
-    
-    # Export domain coordinator
-    exports['domain_coordinator'] = _domain_coordinator
-    
-    return exports
-
-def get_domain_metadata() -> Dict[str, Any]:
-    """Return domain metadata for cost-aware loading"""
-    return __domain_metadata__.copy()
-
-def get_module_list() -> List[str]:
-    """Return list of all modules in domain"""
-    return ['"rift_interfaces"', '"validation_protocols"', '"transformation_protocols"', '"domain_contracts"']
-
-def validate_domain() -> bool:
-    """Validate domain follows modular ABC contract architecture"""
-    return _domain_coordinator.validate_domain_integrity()
-
-def initialize_domain() -> bool:
-    """Initialize domain with modular structure and ABC contracts"""
-    try:
-        if not _domain_coordinator.register_modules():
-            return False
-        
-        if not _domain_coordinator.validate_domain_integrity():
-            return False
-        
-        logger.info(f"Domain {__domain_metadata__['name']} initialized with {len(get_module_list())} modules")
-        return True
-        
-    except Exception as e:
-        logger.error(f"Domain initialization failed: {e}")
-        return False
-
-# Export for cost-aware loading
-__all__ = [
-    'get_domain_exports',
-    'get_domain_metadata', 
-    'get_module_list',
-    'validate_domain',
-    'initialize_domain',
-    'ProtocolsDomainCoordinator'
-]
-
-# Self-validation on domain load
-if not initialize_domain():
-    raise RuntimeError(f"Failed to initialize domain: protocols")
-
-
 # Export configuration interfaces
-__all__ = getattr(globals(), '__all__', []) + [
+__all__ = [
+    "DOMAIN_NAME",
+    "DOMAIN_SPECIFICATION", 
     "get_domain_metadata",
     "validate_configuration",
-    "cost_metadata"
+    "cost_metadata",
+    "get_behavior_policy",
+    "update_behavior_policy"
 ]
+
+# Auto-validate domain on module load
+try:
+    if validate_configuration():
+        import logging
+        logger = logging.getLogger(f"pyics.core.protocols")
+        logger.debug(f"Domain protocols loaded and validated successfully")
+    else:
+        import logging
+        logger = logging.getLogger(f"pyics.core.protocols")
+        logger.warning(f"Domain protocols loaded with validation warnings")
+except Exception as e:
+    import logging
+    logger = logging.getLogger(f"pyics.core.protocols")
+    logger.error(f"Domain protocols validation failed on load: {e}")
 
 # [EOF] - End of protocols domain module
