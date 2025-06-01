@@ -1,0 +1,71 @@
+[build-system]
+requires = ["setuptools>=45", "wheel", "setuptools-scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyics"
+description = "Pyics - Data-Oriented Calendar Automation System"
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [{name = "Nnamdi Okpala", email = "engineering@obinexus.com"}]
+maintainers = [{name = "OBINexus Computing", email = "engineering@obinexus.com"}]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+requires-python = ">=3.8"
+dynamic = ["version"]
+
+dependencies = [
+    "click>=8.0.0",
+    "pydantic>=1.8.0",
+    "typing-extensions>=4.0.0",
+    "python-dateutil>=2.8.0",
+    "icalendar>=4.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=6.0.0",
+    "pytest-cov>=2.10.0",
+    "black>=21.0.0",
+    "mypy>=0.910",
+    "flake8>=3.8.0",
+]
+enterprise = [
+    "cryptography>=3.4.0",
+    "ldap3>=2.9.0",
+]
+telemetry = [
+    "opentelemetry-api>=1.0.0",
+    "opentelemetry-sdk>=1.0.0",
+    "prometheus-client>=0.11.0",
+]
+
+[project.scripts]
+pyics = "pyics.cli.main:main"
+pyics-validate = "pyics.cli.validation.main:validation_cli"
+pyics-generate = "pyics.cli.composition.main:composition_cli"
+pyics-audit = "pyics.cli.registry.main:registry_cli"
+
+[project.urls]
+Documentation = "https://pyics.readthedocs.io/"
+Repository = "https://github.com/obinexuscomputing/pyics"
+"Bug Tracker" = "https://github.com/obinexuscomputing/pyics/issues"
+Changelog = "https://github.com/obinexuscomputing/pyics/blob/main/CHANGELOG.md"
+
+[tool.setuptools]
+packages = ["pyics"]
+
+[tool.setuptools.package-data]
+"pyics.config" = ["*.json", "*.yaml", "*.toml"]
+"pyics.core" = ["*.py"]
+"pyics.cli" = ["*.py"]

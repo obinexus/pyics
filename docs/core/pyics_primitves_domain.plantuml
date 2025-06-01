@@ -1,0 +1,145 @@
+@startuml Pyics Primitives Domain Architecture
+
+!theme plain
+title Pyics Primitives Domain - Dependency Level 0 Foundation\nSingle-Pass RIFT Architecture with Atomic Operations
+
+package "refactored/core/primitives/" as primitives_domain {
+    
+    package "Structural Layer - data_types.py" as data_types {
+        
+        interface AtomicDataType {
+            +validate_immutability() : bool
+            +get_type_signature() : str
+            +atomic_hash() : int
+        }
+        
+        abstract class ImmutableContainer<T> {
+            -_value : T
+            -_hash_cache : int
+            +__init__(value: T)
+            +validate_immutability() : bool
+            +get_type_signature() : str
+            +atomic_hash() : int
+            +{abstract} _validate_construction(value: T) : void
+        }
+        
+        class AtomicValue<T> {
+            +_validate_construction(value: T) : void
+        }
+        
+        class AtomicReference<T> {
+            +_validate_construction(value: T) : void
+        }
+        
+        class "Factory Functions" as factories {
+            +create_atomic_value(value: T) : AtomicValue<T>
+            +create_atomic_reference(obj: T) : AtomicReference<T>
+            +validate_atomic_type(obj: Any) : bool
+            +get_atomic_type_info(obj: Any) : dict
+        }
+    }
+    
+    package "Pure Function Layer - operations.py" as operations {
+        
+        class "Core Atomic Operations" as core_ops {
+            +atomic_identity(value: T) : T
+            +atomic_add(a: Any, b: Any) : Any
+            +atomic_multiply(a: Any, b: Any) : Any
+            +deepcopy_immutable(obj: T) : T
+            +atomic_compare(a: Any, b: Any) : int
+        }
+        
+        class "Function Composition" as composition_ops {
+            +atomic_compose_functions(f: Callable, g: Callable) : Callable
+            +atomic_curry_binary(func: Callable) : Callable
+            +create_atomic_pipeline(*operations: Callable) : Callable
+        }
+        
+        class "Validation Operations" as validation_ops {
+            +atomic_type_check(value: Any, expected_type: type) : bool
+            +atomic_immutability_check(obj: Any) : bool
+            +atomic_safe_access(container: Any, key: Any, default: Any) : Any
+            +validate_atomic_operation(operation: Callable) : bool
+        }
+        
+        class AtomicOperationError {
+            +message : str
+        }
+    }
+    
+    package "Domain Coordination - __init__.py" as coordination {
+        
+        class PrimitivesDomainCoordinator {
+            -_initialized : bool
+            -_atomic_operations : dict
+            -_data_type_factories : dict
+            -_validation_cache : dict
+            +initialize_domain() : bool
+            +get_atomic_operations() : Dict[str, Any]
+            +get_data_type_factories() : Dict[str, Any]
+            +validate_domain_integrity() : bool
+        }
+        
+        class "Domain Metadata" as metadata {
+            +name : "primitives"
+            +priority_index : 1
+            +compute_time_weight : 0.1
+            +dependency_level : 0
+            +thread_safe : True
+            +load_order : 1
+        }
+        
+        class "Export Functions" as exports {
+            +get_domain_exports() : Dict[str, Any]
+            +get_domain_metadata() : Dict[str, Any]
+            +validate_primitives_domain() : bool
+            +initialize_primitives_domain() : bool
+        }
+    }
+}
+
+' Dependency Relationships (Dependency Level 0 - No External Dependencies)
+note top of primitives_domain : **DEPENDENCY LEVEL 0**\nFoundational Layer\nZero External Dependencies
+
+' Internal Relationships
+AtomicDataType <|.. ImmutableContainer : implements
+ImmutableContainer <|-- AtomicValue : extends
+ImmutableContainer <|-- AtomicReference : extends
+
+factories ..> AtomicValue : creates
+factories ..> AtomicReference : creates
+factories ..> AtomicDataType : validates
+
+core_ops ..> AtomicDataType : operates on
+composition_ops ..> core_ops : composes
+validation_ops ..> AtomicDataType : validates
+validation_ops ..> core_ops : validates
+
+coordination ..> data_types : coordinates
+coordination ..> operations : coordinates
+
+PrimitivesDomainCoordinator *-- metadata : contains
+PrimitivesDomainCoordinator *-- exports : provides
+
+' Thread Safety Annotations
+note right of ImmutableContainer : **Thread-Safe**\nImmutable containers with\natomic operation guarantees
+
+note right of core_ops : **Pure Functions**\nDeterministic operations\nwith mathematical guarantees
+
+note right of composition_ops : **Lambda Calculus**\nFunction composition\nfollowing mathematical laws
+
+note bottom of coordination : **Auto-Initialization**\nDomain validates on load\nwith comprehensive testing
+
+' Architecture Annotations
+note left of data_types : **Structural Foundation**\n• Immutable data containers\n• Atomic type protocols\n• Factory pattern implementation\n• Thread-safe construction
+
+note left of operations : **Functional Foundation**\n• Pure atomic operations\n• Mathematical composition\n• Deterministic execution\n• Exception safety
+
+note left of coordination : **Integration Foundation**\n• Domain lifecycle management\n• Export coordination\n• Validation orchestration\n• Cost-aware metadata
+
+' Cost-Aware Loading Flow
+metadata --> exports : provides metadata
+exports --> "Higher Level Domains" : cost-aware loading
+note on link : Priority Index: 1\nCompute Weight: 0.1
+
+@enduml

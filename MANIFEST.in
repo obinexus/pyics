@@ -1,0 +1,29 @@
+# MANIFEST.in
+# Pyics Package Data Inclusion Configuration
+
+# Include documentation
+include README.md
+include CHANGELOG.md
+include LICENSE
+include pyproject.toml
+
+# Include configuration files
+recursive-include pyics/config *.json *.yaml *.toml *.py
+recursive-include pyics/core *.py
+recursive-include pyics/cli *.py
+
+# Include development scripts
+recursive-include scripts *.py *.sh
+
+# Include test data
+recursive-include tests *.py *.json *.yaml
+
+# Exclude unnecessary files
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude *.pyd
+global-exclude __pycache__
+global-exclude .git*
+global-exclude .pytest_cache
+global-exclude *.so
+global-exclude *.egg-info
