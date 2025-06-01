@@ -1,0 +1,135 @@
+{
+  "domains_found": [
+    "composition",
+    "logic",
+    "primitives",
+    "protocols",
+    "registry",
+    "routing",
+    "safety",
+    "structures",
+    "transformations",
+    "transforms",
+    "validation",
+    "validators",
+    "__pycache__"
+  ],
+  "complex_structures": {
+    "composition": {
+      "complex_patterns": [
+        "implementations",
+        "interfaces",
+        "tests"
+      ],
+      "file_count": 25,
+      "depth": 2,
+      "score": 6
+    },
+    "logic": {
+      "complex_patterns": [],
+      "file_count": 43,
+      "depth": 3,
+      "score": 0
+    },
+    "primitives": {
+      "complex_patterns": [
+        "implementations",
+        "interfaces",
+        "tests"
+      ],
+      "file_count": 27,
+      "depth": 2,
+      "score": 6
+    },
+    "protocols": {
+      "complex_patterns": [
+        "implementations",
+        "interfaces",
+        "compliance",
+        "contracts",
+        "tests"
+      ],
+      "file_count": 58,
+      "depth": 3,
+      "score": 10
+    },
+    "registry": {
+      "complex_patterns": [
+        "implementations",
+        "interfaces",
+        "tests"
+      ],
+      "file_count": 40,
+      "depth": 3,
+      "score": 6
+    },
+    "routing": {
+      "complex_patterns": [
+        "implementations",
+        "interfaces",
+        "tests"
+      ],
+      "file_count": 25,
+      "depth": 2,
+      "score": 6
+    },
+    "safety": {
+      "complex_patterns": [
+        "implementations",
+        "interfaces",
+        "tests"
+      ],
+      "file_count": 25,
+      "depth": 2,
+      "score": 6
+    },
+    "structures": {
+      "complex_patterns": [
+        "implementations"
+      ],
+      "file_count": 66,
+      "depth": 3,
+      "score": 2
+    },
+    "transformations": {
+      "complex_patterns": [
+        "implementations",
+        "interfaces",
+        "tests"
+      ],
+      "file_count": 27,
+      "depth": 2,
+      "score": 6
+    },
+    "transforms": {
+      "complex_patterns": [],
+      "file_count": 52,
+      "depth": 3,
+      "score": 0
+    },
+    "validation": {
+      "complex_patterns": [],
+      "file_count": 43,
+      "depth": 3,
+      "score": 0
+    },
+    "validators": {
+      "complex_patterns": [
+        "implementations",
+        "interfaces",
+        "tests"
+      ],
+      "file_count": 26,
+      "depth": 2,
+      "score": 6
+    },
+    "__pycache__": {
+      "complex_patterns": [],
+      "file_count": 5,
+      "depth": 1,
+      "score": 0
+    }
+  },
+  "total_files": 0,
+  "complexity_score": 54
+}
