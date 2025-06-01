@@ -52,9 +52,9 @@ cost_metadata: DomainCostMetadata = {
 # Domain behavior policies
 BEHAVIOR_POLICIES: Dict[str, Any] = {
     "strict_validation": True,
-    "atomic_operations": true,
-    "immutable_structures": false,
-    "interface_only": false,
+    "atomic_operations": True,
+    "immutable_structures": False,
+    "interface_only": False,
     "error_handling": "strict",
     "logging_level": "INFO",
     "performance_monitoring": True
