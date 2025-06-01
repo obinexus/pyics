@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Logs and databases
+*.log
+*.sqlite3
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Pyics specific
+*_backup*/
+*cleanup*.log
+*validation*.log
+*diagnostic*.log
+*_report_*.md
+*_report_*.json
+systematic_cleanup_backup/
+*Zone.Identifier
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
