@@ -1,0 +1,63 @@
+2025-06-01 23:49:49,705 - INFO - [__main__] - ================================================================================
+2025-06-01 23:49:49,705 - INFO - [__main__] - PYICS SYSTEMATIC ARCHITECTURE CLEANUP EXECUTION
+2025-06-01 23:49:49,705 - INFO - [__main__] - Engineering Lead: Nnamdi Okpala / OBINexus Computing
+2025-06-01 23:49:49,706 - INFO - [__main__] - Methodology: Waterfall-based systematic implementation
+2025-06-01 23:49:49,706 - INFO - [__main__] - ================================================================================
+2025-06-01 23:49:49,706 - INFO - [__main__] - Executing phase_1_backup: Comprehensive backup and structure analysis
+2025-06-01 23:49:58,727 - INFO - [__main__] - Core directory backed up: /mnt/c/Users/OBINexus/Projects/Packages/pyics/systematic_cleanup_backup/phase_1_backup_20250601_234949/core_original
+2025-06-01 23:50:00,037 - INFO - [__main__] - Discovered domains: ['composition', 'logic', 'primitives', 'protocols', 'registry', 'routing', 'safety', 'structures', 'transformations', 'transforms', 'validation', 'validators']
+2025-06-01 23:50:00,990 - INFO - [__main__] - ✅ phase_1_backup completed successfully
+2025-06-01 23:50:00,991 - INFO - [__main__] - Executing phase_2_domain_consolidation: Domain redundancy elimination
+2025-06-01 23:50:01,198 - INFO - [__main__] - Domain validation consolidated successfully
+2025-06-01 23:50:02,324 - INFO - [__main__] - Domain transforms consolidated successfully
+2025-06-01 23:50:02,452 - WARNING - [__main__] - Failed to preserve functions from /mnt/c/Users/OBINexus/Projects/Packages/pyics/pyics/core/logic/composition/__pycache__/data_types.py: invalid syntax (<unknown>, line 27)
+2025-06-01 23:50:02,456 - WARNING - [__main__] - Failed to preserve functions from /mnt/c/Users/OBINexus/Projects/Packages/pyics/pyics/core/logic/composition/__pycache__/operations.py: invalid syntax (<unknown>, line 28)
+2025-06-01 23:50:02,459 - WARNING - [__main__] - Failed to preserve functions from /mnt/c/Users/OBINexus/Projects/Packages/pyics/pyics/core/logic/composition/__pycache__/relations.py: invalid syntax (<unknown>, line 27)
+2025-06-01 23:50:02,469 - WARNING - [__main__] - Failed to preserve functions from /mnt/c/Users/OBINexus/Projects/Packages/pyics/pyics/core/logic/functional/__pycache__/data_types.py: invalid syntax (<unknown>, line 27)
+2025-06-01 23:50:02,472 - WARNING - [__main__] - Failed to preserve functions from /mnt/c/Users/OBINexus/Projects/Packages/pyics/pyics/core/logic/functional/__pycache__/operations.py: invalid syntax (<unknown>, line 28)
+2025-06-01 23:50:02,476 - WARNING - [__main__] - Failed to preserve functions from /mnt/c/Users/OBINexus/Projects/Packages/pyics/pyics/core/logic/functional/__pycache__/relations.py: invalid syntax (<unknown>, line 27)
+2025-06-01 23:50:02,485 - WARNING - [__main__] - Failed to preserve functions from /mnt/c/Users/OBINexus/Projects/Packages/pyics/pyics/core/logic/mathematical/__pycache__/data_types.py: invalid syntax (<unknown>, line 27)
+2025-06-01 23:50:02,489 - WARNING - [__main__] - Failed to preserve functions from /mnt/c/Users/OBINexus/Projects/Packages/pyics/pyics/core/logic/mathematical/__pycache__/operations.py: invalid syntax (<unknown>, line 28)
+2025-06-01 23:50:02,492 - WARNING - [__main__] - Failed to preserve functions from /mnt/c/Users/OBINexus/Projects/Packages/pyics/pyics/core/logic/mathematical/__pycache__/relations.py: invalid syntax (<unknown>, line 27)
+2025-06-01 23:50:02,541 - INFO - [__main__] - Domain logic consolidated successfully
+2025-06-01 23:50:03,321 - INFO - [__main__] - ✅ phase_2_domain_consolidation completed successfully
+2025-06-01 23:50:03,321 - INFO - [__main__] - Executing phase_3_structure_flattening: Complex structure elimination
+2025-06-01 23:50:03,349 - INFO - [__main__] - Eliminated complex structure: composition/implementations
+2025-06-01 23:50:03,375 - INFO - [__main__] - Eliminated complex structure: composition/interfaces
+2025-06-01 23:50:03,402 - INFO - [__main__] - Eliminated complex structure: composition/tests
+2025-06-01 23:50:03,432 - INFO - [__main__] - Eliminated complex structure: primitives/implementations
+2025-06-01 23:50:03,458 - INFO - [__main__] - Eliminated complex structure: primitives/interfaces
+2025-06-01 23:50:03,483 - INFO - [__main__] - Eliminated complex structure: primitives/tests
+2025-06-01 23:50:03,511 - INFO - [__main__] - Eliminated complex structure: protocols/implementations
+2025-06-01 23:50:03,553 - INFO - [__main__] - Eliminated complex structure: protocols/interfaces
+2025-06-01 23:50:03,594 - INFO - [__main__] - Eliminated complex structure: protocols/compliance
+2025-06-01 23:50:03,636 - INFO - [__main__] - Eliminated complex structure: protocols/contracts
+2025-06-01 23:50:03,663 - INFO - [__main__] - Eliminated complex structure: protocols/tests
+2025-06-01 23:50:03,685 - INFO - [__main__] - Eliminated complex structure: registry/implementations
+2025-06-01 23:50:03,703 - INFO - [__main__] - Eliminated complex structure: registry/interfaces
+2025-06-01 23:50:03,722 - INFO - [__main__] - Eliminated complex structure: registry/tests
+2025-06-01 23:50:03,749 - INFO - [__main__] - Eliminated complex structure: routing/implementations
+2025-06-01 23:50:03,774 - INFO - [__main__] - Eliminated complex structure: routing/interfaces
+2025-06-01 23:50:03,801 - INFO - [__main__] - Eliminated complex structure: routing/tests
+2025-06-01 23:50:03,828 - INFO - [__main__] - Eliminated complex structure: safety/implementations
+2025-06-01 23:50:03,854 - INFO - [__main__] - Eliminated complex structure: safety/interfaces
+2025-06-01 23:50:03,881 - INFO - [__main__] - Eliminated complex structure: safety/tests
+2025-06-01 23:50:03,909 - INFO - [__main__] - Eliminated complex structure: structures/implementations
+2025-06-01 23:50:03,942 - INFO - [__main__] - Eliminated complex structure: transformations/implementations
+2025-06-01 23:50:03,965 - INFO - [__main__] - Eliminated complex structure: transformations/interfaces
+2025-06-01 23:50:04,011 - INFO - [__main__] - Eliminated complex structure: transformations/tests
+2025-06-01 23:50:04,042 - INFO - [__main__] - Eliminated complex structure: validators/implementations
+2025-06-01 23:50:04,068 - INFO - [__main__] - Eliminated complex structure: validators/interfaces
+2025-06-01 23:50:04,095 - INFO - [__main__] - Eliminated complex structure: validators/tests
+2025-06-01 23:50:04,571 - INFO - [__main__] - ✅ phase_3_structure_flattening completed successfully
+2025-06-01 23:50:04,571 - INFO - [__main__] - Executing phase_4_load_order_implementation: Single-pass load order configuration
+2025-06-01 23:50:04,611 - INFO - [__main__] - Generated standard module: composition/README.md
+2025-06-01 23:50:04,622 - INFO - [__main__] - Generated standard module: validators/README.md
+2025-06-01 23:50:04,634 - INFO - [__main__] - Generated standard module: transformations/README.md
+2025-06-01 23:50:04,645 - INFO - [__main__] - Generated standard module: registry/README.md
+2025-06-01 23:50:04,655 - INFO - [__main__] - Generated standard module: routing/README.md
+2025-06-01 23:50:04,666 - INFO - [__main__] - Generated standard module: safety/README.md
+2025-06-01 23:50:05,138 - INFO - [__main__] - ✅ phase_4_load_order_implementation completed successfully
+2025-06-01 23:50:05,138 - INFO - [__main__] - Executing phase_5_validation: Architecture compliance validation
+2025-06-01 23:50:05,722 - INFO - [__main__] - ✅ phase_5_validation completed successfully
+2025-06-01 23:50:05,724 - INFO - [__main__] - Completion report generated: /mnt/c/Users/OBINexus/Projects/Packages/pyics/systematic_cleanup_report.md
